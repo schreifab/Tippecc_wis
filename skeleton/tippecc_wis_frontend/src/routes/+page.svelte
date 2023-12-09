@@ -13,8 +13,8 @@
 	  console.log (climateFunctions)
     }
 
-	function convertToClimateFunctionObjects(jsonArray: { id: number; name: string}[]): ClimateFunction[] {
-    	return jsonArray.map(obj => new ClimateFunction(obj.id, obj.name));
+	function convertToClimateFunctionObjects(jsonArray: { id: number; name: string, description: string}[]): ClimateFunction[] {
+    	return jsonArray.map(obj => new ClimateFunction(obj.id, obj.name, obj.description));
 	}
 
 	//climateFunctions = [{id: 1,name: "t1"},{id: 2,name: "t2"}]

@@ -8,14 +8,3 @@ declare namespace App {
 	// interface Platform {}
 }
 
-declare class ClimateFunction {
-	constructor(id, name) {
-        this.id = id;
-        this.name = name;
-        this.description = " no descr";
-    }
-
-	id: number
-	name: string
-	description: string
-}
