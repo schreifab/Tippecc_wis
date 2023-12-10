@@ -17,6 +17,10 @@ def create_climate_function_list_4_api():
         id += 1
     return list
         
+def create_climate_function_details_4_api(id):
+    func = cf.ClimateFunctionList.list[id]()
+    return {'datasets':[vars(func.dataset_dict[key]) for key in func.dataset_dict], 'parameters':[vars(func.params_dict[key]) for key in func.params_dict]}
+        
 
 
 class ClimateIndicesFunctionListAPIView(generics.ListAPIView):
@@ -25,8 +29,12 @@ class ClimateIndicesFunctionListAPIView(generics.ListAPIView):
 
 class ClimateFunctionListAPIView(APIView):
     def get(self, request):
-        # Perform necessary operations
         data = create_climate_function_list_4_api()
+        return JsonResponse(data, safe=False)
+
+class ClimateFunctionDetailView(APIView):
+    def get(self, request, id):
+        data = create_climate_function_details_4_api(id)
         return JsonResponse(data, safe=False)
 
 # Create your views here.
