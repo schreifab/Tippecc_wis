@@ -8,17 +8,17 @@
     async function fetchClimateFunctions() {
       const response = await fetch('http://localhost:8000/api/climate-indices/');
       const data = await response.json();
-	  console.log( data)
 	  climateFunctions = convertToClimateFunctionObjects(data)
-	  console.log (climateFunctions)
     }
 
 	function convertToClimateFunctionObjects(jsonArray: { id: number; name: string, description: string}[]): ClimateFunction[] {
     	return jsonArray.map(obj => new ClimateFunction(obj.id, obj.name, obj.description));
 	}
 
-	//climateFunctions = [{id: 1,name: "t1"},{id: 2,name: "t2"}]
-	//
+	function handleFunctionSelected(event: CustomEvent<{ id: number }>) {
+		const id = event.detail.id;
+		console.log('Benutzerdefiniertes Ereignis aus OtherComponent. ID:', id);
+	}
     // Call the fetchClimateIndices function when the component is mounted
     onMount(() => {
       fetchClimateFunctions();
@@ -35,7 +35,7 @@
 					<p>Loading...</p>
 				{:else} 
 					{#each climateFunctions as climateFunction}
-						<ClimateFunctionCard climateFunction = {climateFunction}/>
+						<ClimateFunctionCard climateFunction = {climateFunction} on:functionSelected={handleFunctionSelected}/>
 					{/each}
 				{/if} 
 			</div>
