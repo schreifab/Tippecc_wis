@@ -30,7 +30,7 @@ def create_climate_function_details_4_api(id):
         dict: information for datasets and parameters of the function
     """
     func = cf.ClimateFunctionList.list[id]()
-    return {'datasets':[vars(func.dataset_dict[key]) for key in func.dataset_dict], 'parameters':[vars(func.params_dict[key]) for key in func.params_dict]}
+    return {'id': id, 'datasets':[vars(func.dataset_dict[key]) for key in func.dataset_dict], 'parameters':[vars(func.params_dict[key]) for key in func.params_dict]}
         
 class ClimateFunctionListAPIView(APIView):
     """Class for API View for climate function list
