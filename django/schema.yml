@@ -1,0 +1,193 @@
+openapi: 3.0.3
+info:
+  title: Tippecc WIS
+  version: 1.0.0
+  description: Your project description
+paths:
+  /api/climate-indices/:
+    get:
+      operationId: api_climate_indices_list
+      description: |-
+        returns data for the api if called
+
+        Args:
+            request (_type_): _description_
+
+        Returns:
+            json: list as json
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClimateFunction'
+          description: ''
+    post:
+      operationId: api_climate_indices_create
+      description: |-
+        returns data for the api if called
+
+        Args:
+            request (_type_): _description_
+
+        Returns:
+            json: list as json
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClimateFunction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClimateFunction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClimateFunction'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClimateFunction'
+          description: ''
+  /api/climate-indices/{id}:
+    get:
+      operationId: api_climate_indices_retrieve
+      description: |-
+        returns data for the api if called
+
+        Args:
+            request (_type_): _description_
+
+        Returns:
+            json: list as json
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClimateFunctionDetail'
+          description: ''
+components:
+  schemas:
+    ClimateDataset:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        desc:
+          type: string
+          maxLength: 200
+        filter_word:
+          type: string
+          maxLength: 100
+        optional:
+          type: string
+          readOnly: true
+      required:
+      - desc
+      - filter_word
+      - name
+      - optional
+    ClimateFunction:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 200
+      required:
+      - description
+      - id
+      - name
+    ClimateFunctionDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dataset_dict:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ClimateDataset'
+        params_dict:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ClimateParameter'
+      required:
+      - dataset_dict
+      - id
+      - params_dict
+    ClimateParameter:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        desc:
+          type: string
+          maxLength: 200
+        datatype:
+          type: string
+          maxLength: 100
+        input_list:
+          type: array
+          items:
+            type: string
+        unit_list:
+          type: array
+          items:
+            type: string
+        optional:
+          type: string
+          readOnly: true
+      required:
+      - datatype
+      - desc
+      - input_list
+      - name
+      - optional
+      - unit_list
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
