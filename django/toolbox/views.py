@@ -55,21 +55,6 @@ class ClimateFunctionListAPIView(APIView):
         serializer_data = serializer_class(queryset, many=True).data
         return JsonResponse(serializer_data, safe=False)
     
-    @extend_schema(request=ClimateFunctionSerializer, responses = ClimateFunctionSerializer(many=True))
-    def post(self, request):
-        """ returns data for the api if called
-
-        Args:
-            request (_type_): _description_
-
-        Returns:
-            json: list as json
-        """
-        queryset = cf.ClimateFunctionList.list
-        serializer_class = ClimateFunctionSerializer
-        serializer_data = serializer_class(queryset, many=True).data
-        return JsonResponse(serializer_data, safe=False)
-
 class ClimateFunctionDetailView(APIView):
     """Class for API View for climate function details
 
@@ -89,6 +74,21 @@ class ClimateFunctionDetailView(APIView):
         queryset = cf.ClimateFunctionList.list[id]
         serializer_class = ClimateFunctionDetailSerializer
         serializer_data = serializer_class(queryset).data
+        return JsonResponse(serializer_data, safe=False)
+    
+    @extend_schema(request=ClimateFunctionSerializer, responses = ClimateFunctionSerializer(many=True))
+    def post(self, request):
+        """ returns data for the api if called
+
+        Args:
+            request (_type_): _description_
+
+        Returns:
+            json: list as json
+        """
+        queryset = cf.ClimateFunctionList.list
+        serializer_class = ClimateFunctionSerializer
+        serializer_data = serializer_class(queryset, many=True).data
         return JsonResponse(serializer_data, safe=False)
 
 

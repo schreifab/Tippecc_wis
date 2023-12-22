@@ -30,43 +30,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/ClimateFunction'
           description: ''
-    post:
-      operationId: api_climate_indices_create
-      description: |-
-        returns data for the api if called
-
-        Args:
-            request (_type_): _description_
-
-        Returns:
-            json: list as json
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ClimateFunction'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ClimateFunction'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ClimateFunction'
-        required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ClimateFunction'
-          description: ''
   /api/climate-indices/{id}:
     get:
       operationId: api_climate_indices_retrieve
@@ -96,6 +59,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClimateFunctionDetail'
+          description: ''
+    post:
+      operationId: api_climate_indices_create
+      description: |-
+        returns data for the api if called
+
+        Args:
+            request (_type_): _description_
+
+        Returns:
+            json: list as json
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClimateFunction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClimateFunction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClimateFunction'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClimateFunction'
           description: ''
 components:
   schemas:

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type {FunctionDetails, Dataset, Parameter} from "$lib/interfaces";
-    export let functionDetails : FunctionDetails; 
+    import type { ClimateFunctionDetail, ClimateDataset, ClimateParameter} from "../model";
+    export let functionDetails : ClimateFunctionDetail; 
 
     import { popup } from '@skeletonlabs/skeleton';
     import type { PopupSettings } from '@skeletonlabs/skeleton';
@@ -11,30 +11,29 @@
         console.log(params_array_4_binding);
     }
 
-
     const popupHover: PopupSettings = {
-	event: 'hover',
-	target: 'popupHover',
-	placement: 'bottom'
+        event: 'hover',
+        target: 'popupHover',
+        placement: 'bottom'
     };
 
     let data_list: String[] = ["TIPPECC_CLMcom-KIT-CCLM5-0-15_v1_MPI-M-MPI-ESM-LR_tas_day_1950_2100.nc"];
-    let dataset_array_4_binding: {selection: string[], dataset: Dataset}[] = [];
-    let params_array_4_binding: {selected_field: string | number, selected_unit: string, parameter: Parameter}[] = [];
+    let dataset_array_4_binding: {selection: string[], dataset: ClimateDataset}[] = [];
+    let params_array_4_binding: {selected_field: string | number, selected_unit: string, parameter: ClimateParameter}[] = [];
 
-    for (let ds of functionDetails.datasets) {
-        dataset_array_4_binding.push({selection: [], dataset: ds});
+    for (let key in functionDetails.dataset_dict) {
+        dataset_array_4_binding.push({selection: [], dataset: functionDetails.dataset_dict[key]});
     }
 
-    for (let param of functionDetails.parameters) {
-        params_array_4_binding.push({selected_field: "", selected_unit: "" , parameter: param});
+    for (let key in functionDetails.params_dict) {
+        params_array_4_binding.push({selected_field: "", selected_unit: "" , parameter: functionDetails.params_dict[key]});
     }
 </script>
 
 <div class = 'card'>
     {#each dataset_array_4_binding as entry}
     <div>
-        <div class = "[&>*]:pointer-events-none" use:popup={popupHover}>
+        <div> <!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
             {entry.dataset.name}
         </div>
         <div class="card p-4 variant-filled-secondary" data-popup="popupHover">
@@ -51,7 +50,7 @@
     {/each}
     {#each params_array_4_binding as entry}
     <div>
-        <div class = "[&>*]:pointer-events-none" use:popup={popupHover}>
+        <div> <!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
             {entry.parameter.name}
         </div>
         <div class="card p-4 variant-filled-secondary" data-popup="popupHover">

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {ClimateFunction} from "../ClimateFunction"
+    import type { ClimateFunction } from "../model"
     export let climateFunction : ClimateFunction; 
 
     //event to handle clicked button
@@ -8,7 +8,6 @@
     function handleClick(id: number ){
         dispatch('functionSelected', { id});
     }
-    
 </script>
 
 <div class = 'card'>
