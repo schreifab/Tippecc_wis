@@ -29,33 +29,9 @@ import type {
 import type {
   ClimateFunctionDetail
 } from '../model/climateFunctionDetail'
-
-// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
-type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
-T,
->() => T extends Y ? 1 : 2
-? A
-: B;
-
-type WritableKeys<T> = {
-[P in keyof T]-?: IfEquals<
-  { [Q in P]: T[P] },
-  { -readonly [Q in P]: T[P] },
-  P
->;
-}[keyof T];
-
-type UnionToIntersection<U> =
-  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
-type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
-
-type Writable<T> = Pick<T, WritableKeys<T>>;
-type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
-  [P in keyof Writable<T>]: T[P] extends object
-    ? NonReadonly<NonNullable<T[P]>>
-    : T[P];
-} : DistributeReadOnlyOverUnions<T>;
-
+import type {
+  ClimateFunctionRequest
+} from '../model/climateFunctionRequest'
 
 
 
@@ -192,26 +168,26 @@ Returns:
  */
 export const apiClimateIndicesCreate = (
     id: number,
-    climateFunction: NonReadonly<ClimateFunction>, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<ClimateFunction[]>> => {
+    climateFunctionRequest: ClimateFunctionRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ClimateFunctionDetail>> => {
     
     return axios.post(
       `http://127.0.0.1:8000/api/climate-indices/${id}`,
-      climateFunction,options
+      climateFunctionRequest,options
     );
   }
 
 
 
 export const getApiClimateIndicesCreateMutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: NonReadonly<ClimateFunction>}, TContext>, axios?: AxiosRequestConfig}
-): CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: NonReadonly<ClimateFunction>}, TContext> => {
+    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: ClimateFunctionRequest}, TContext>, axios?: AxiosRequestConfig}
+): CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: ClimateFunctionRequest}, TContext> => {
  const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, {id: number;data: NonReadonly<ClimateFunction>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, {id: number;data: ClimateFunctionRequest}> = (props) => {
           const {id,data} = props ?? {};
 
           return  apiClimateIndicesCreate(id,data,axiosOptions)
@@ -223,11 +199,11 @@ export const getApiClimateIndicesCreateMutationOptions = <TError = AxiosError<un
    return  { mutationFn, ...mutationOptions }}
 
     export type ApiClimateIndicesCreateMutationResult = NonNullable<Awaited<ReturnType<typeof apiClimateIndicesCreate>>>
-    export type ApiClimateIndicesCreateMutationBody = NonReadonly<ClimateFunction>
+    export type ApiClimateIndicesCreateMutationBody = ClimateFunctionRequest
     export type ApiClimateIndicesCreateMutationError = AxiosError<unknown>
 
     export const createApiClimateIndicesCreate = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: NonReadonly<ClimateFunction>}, TContext>, axios?: AxiosRequestConfig}
+    TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: ClimateFunctionRequest}, TContext>, axios?: AxiosRequestConfig}
 ) => {
 
       const mutationOptions = getApiClimateIndicesCreateMutationOptions(options);

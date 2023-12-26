@@ -11,4 +11,6 @@ export * from './climateFunction';
 export * from './climateFunctionDetail';
 export * from './climateFunctionDetailDatasetDict';
 export * from './climateFunctionDetailParamsDict';
+export * from './climateFunctionRequest';
+export * from './climateFunctionRequestParamvalueDict';
 export * from './climateParameter';

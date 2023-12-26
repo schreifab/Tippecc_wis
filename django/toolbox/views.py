@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 
 from drf_spectacular.utils import extend_schema
 import toolbox.climateFunctions as cf
 
-from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetailSerializer
+from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetailSerializer, ClimateFunctionRequestSerializer
 
 def create_climate_function_list_4_api():
     """Creates a list of all functions available including id, name and function description
@@ -76,8 +77,8 @@ class ClimateFunctionDetailView(APIView):
         serializer_data = serializer_class(queryset).data
         return JsonResponse(serializer_data, safe=False)
     
-    @extend_schema(request=ClimateFunctionSerializer, responses = ClimateFunctionSerializer(many=True))
-    def post(self, request):
+    @extend_schema(request=ClimateFunctionRequestSerializer(), responses = ClimateFunctionDetailSerializer())
+    def post(self, request, id):
         """ returns data for the api if called
 
         Args:
@@ -86,9 +87,9 @@ class ClimateFunctionDetailView(APIView):
         Returns:
             json: list as json
         """
-        queryset = cf.ClimateFunctionList.list
-        serializer_class = ClimateFunctionSerializer
-        serializer_data = serializer_class(queryset, many=True).data
-        return JsonResponse(serializer_data, safe=False)
+        
+        serializer_data = ClimateFunctionRequestSerializer(data=request.data)
+        print(serializer_data)
+        return Response(status = status.HTTP_200_OK)
 
 

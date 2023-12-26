@@ -1,14 +1,25 @@
 <script lang="ts">
-    import type { ClimateFunctionDetail, ClimateDataset, ClimateParameter} from "../model";
+    import type { ClimateFunctionDetail, ClimateDataset, ClimateParameter, ClimateFunctionRequest} from "../model";
     export let functionDetails : ClimateFunctionDetail; 
 
     import { popup } from '@skeletonlabs/skeleton';
     import type { PopupSettings } from '@skeletonlabs/skeleton';
 
     import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+	import {createApiClimateIndicesCreate, apiClimateIndicesCreate } from "../api/api";
 
     function handleSubmit() {
         console.log(params_array_4_binding);
+        let data_request: ClimateFunctionRequest 
+        let dataset_array: string [] = []
+        let params_dict: { [key: string]: string | number } = {}
+
+        for (let entry of params_array_4_binding){
+            params_dict[entry.key] = entry.selected_field + " " + entry.selected_unit
+        }
+        data_request = {dataset_list: dataset_array, paramvalue_dict: params_dict }
+        const id = 0 
+        apiClimateIndicesCreate(id, data_request)
     }
 
     const popupHover: PopupSettings = {
@@ -19,14 +30,14 @@
 
     let data_list: String[] = ["TIPPECC_CLMcom-KIT-CCLM5-0-15_v1_MPI-M-MPI-ESM-LR_tas_day_1950_2100.nc"];
     let dataset_array_4_binding: {selection: string[], dataset: ClimateDataset}[] = [];
-    let params_array_4_binding: {selected_field: string | number, selected_unit: string, parameter: ClimateParameter}[] = [];
+    let params_array_4_binding: {key: string , selected_field: string | number, selected_unit: string, parameter: ClimateParameter}[] = [];
 
     for (let key in functionDetails.dataset_dict) {
         dataset_array_4_binding.push({selection: [], dataset: functionDetails.dataset_dict[key]});
     }
 
     for (let key in functionDetails.params_dict) {
-        params_array_4_binding.push({selected_field: "", selected_unit: "" , parameter: functionDetails.params_dict[key]});
+        params_array_4_binding.push({key: key, selected_field: "", selected_unit: "" , parameter: functionDetails.params_dict[key]});
     }
 </script>
 

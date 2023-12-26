@@ -1,3 +1,4 @@
+from typing import Any
 import xclim.indices
 import xarray as xr
 
@@ -79,3 +80,12 @@ class ClimateFunctionList:
                                 },
                             climateFunc=xclim.atmos.growing_degree_days)
             ]
+
+class ClimateFunctionRequest(models.Model):
+    dataset_list = []
+    paramvalue_dict = {}
+    aoi = []
+    def __init__(self, dataset_list, paramvalue_dict) :
+        self.dataset_list = dataset_list
+        self.paramvalue_dict = paramvalue_dict
+        

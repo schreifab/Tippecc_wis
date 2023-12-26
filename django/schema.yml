@@ -82,13 +82,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClimateFunction'
+              $ref: '#/components/schemas/ClimateFunctionRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ClimateFunction'
+              $ref: '#/components/schemas/ClimateFunctionRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ClimateFunction'
+              $ref: '#/components/schemas/ClimateFunctionRequest'
         required: true
       security:
       - cookieAuth: []
@@ -99,9 +99,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ClimateFunction'
+                $ref: '#/components/schemas/ClimateFunctionDetail'
           description: ''
 components:
   schemas:
@@ -159,6 +157,19 @@ components:
       - dataset_dict
       - id
       - params_dict
+    ClimateFunctionRequest:
+      type: object
+      properties:
+        dataset_list:
+          type: array
+          items:
+            type: string
+        paramvalue_dict:
+          type: object
+          additionalProperties: {}
+      required:
+      - dataset_list
+      - paramvalue_dict
     ClimateParameter:
       type: object
       properties:
