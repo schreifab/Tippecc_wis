@@ -11,7 +11,7 @@
     function handleSubmit() {
         console.log(params_array_4_binding);
         let data_request: ClimateFunctionRequest 
-        let dataset_array: string [] = []
+        let dataset_array: string [] = ["tas"] //change needed
         let params_dict: { [key: string]: string | number } = {}
 
         for (let entry of params_array_4_binding){
@@ -20,6 +20,7 @@
         data_request = {dataset_list: dataset_array, paramvalue_dict: params_dict }
         const id = 0 
         apiClimateIndicesCreate(id, data_request)
+
     }
 
     const popupHover: PopupSettings = {

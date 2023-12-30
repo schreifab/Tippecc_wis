@@ -1,6 +1,7 @@
 from typing import Any
 import xclim.indices
 import xarray as xr
+import os
 
 from django.db import models
 
@@ -18,9 +19,43 @@ class ClimateFunction(models.Model):
         self.params_dict = params_dict
         self.climateFunction = climateFunc
         self.optional_restrictions=optional_restrictions
+        
+    def set_climate_scene(self, scene): 
+        self.scene = scene
 
-    def execute(self): 
-        return self.climateFunction(**self.dataset_dict, **self.params_dict)
+    def execute(self, output_path): 
+        message = "Function was started succesfully"
+        results = []
+        number_of_datasets = self.get_number_of_datasets_or_error_message()
+        if type(number_of_datasets) is not int:
+            return number_of_datasets, results
+        for i in range(number_of_datasets):
+            print(self.create_kwargs_dict(i))
+            result_ds = self.climateFunction(**self.create_kwargs_dict(i))
+            output_filename = self.name + "_" + str(i)
+            result_ds.to_netcdf(os.path.join(output_path, output_filename))
+            results.append(output_filename)
+        return results
+
+    def get_number_of_datasets_or_error_message(self):
+        number_of_datasets = 0
+        for key in self.dataset_dict:
+            length = len(self.dataset_dict[key].path_list)
+            if (length == 0 and self.dataset_dict[key].optional == False):
+                return "No dataset found"
+            if (number_of_datasets == 0):
+                number_of_datasets = length
+            if ((number_of_datasets != length and self.dataset_dict[key].optional == False) or (number_of_datasets != length and self.dataset_dict[key].optional == True and length != 0)):
+                return "different amount of datasets were found. Unable to execute"
+        return number_of_datasets
+    
+    def create_kwargs_dict(self, i):
+        kwargs = {}
+        for key in self.dataset_dict:
+            kwargs[key] = clip_ds_by_scene(self.dataset_dict[key].get_dataset(i), self.scene).tas #remove tas here later
+        for key in self.params_dict:
+            kwargs[key] = self.params_dict[key].value
+        return kwargs
 
 class ClimateDataset(models.Model):
     name = models.CharField(max_length=100)
@@ -34,11 +69,11 @@ class ClimateDataset(models.Model):
         self.filter_word = filter_word
         self.optional = optional
         
-    def set_path(self, path):
-        self.path = path
+    def set_path_list(self, path_list):
+        self.path_list = path_list
         
-    def get_dataset(self):
-        ds = xr.open_dataset(self.path, engine = 'netcdf4')
+    def get_dataset(self, i):
+        ds = xr.open_dataset(self.path_list[i], engine = 'netcdf4')
         #remove if data correct
         ds.tas.attrs['units'] = 'K'
         return ds
@@ -59,7 +94,15 @@ class ClimateParameter(models.Model):
         self.unit_list = unit_list
         self.datatype = datatype
         self.optional = optional
-
+        
+    def set_value(self, value):
+        if self.datatype == "float":
+            self.value = float(value)
+        # add more elif statements here if other datatype transformations are needed
+        else: 
+            self.value = value
+        
+        
 class ClimateFunctionList:
     list = [ClimateFunction(id=0,name="growing degree days", description="Growing degree-days over threshold temperature value",
                             dataset_dict = {
@@ -80,6 +123,22 @@ class ClimateFunctionList:
                                 },
                             climateFunc=xclim.atmos.growing_degree_days)
             ]
+    
+    def get_func_by_id(self, id):
+        for func in self.list:
+            if func.id == id:
+                return func
+        return 0
+
+class ClimateScene():
+    
+    def __init__(self, lon_min, lon_max, lat_min, lat_max, time_min = '1970-01-01T12:00:00.000000000', time_max  = '2100-12-31T12:00:00.000000000'):
+        self.lon_min = lon_min
+        self.lon_max = lon_max
+        self.lat_min = lat_min
+        self.lat_max = lat_max
+        self.time_min = time_min
+        self.time_max = time_max
 
 class ClimateFunctionRequest(models.Model):
     dataset_list = []
@@ -89,3 +148,5 @@ class ClimateFunctionRequest(models.Model):
         self.dataset_list = dataset_list
         self.paramvalue_dict = paramvalue_dict
         
+def clip_ds_by_scene(ds, scene):
+    return ds.sel(lon=slice(scene.lon_min, scene.lon_max), lat=slice(scene.lat_min, scene.lat_max), time=slice(scene.time_min,scene.time_max))

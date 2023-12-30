@@ -169,7 +169,7 @@ Returns:
 export const apiClimateIndicesCreate = (
     id: number,
     climateFunctionRequest: ClimateFunctionRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<ClimateFunctionDetail>> => {
+ ): Promise<AxiosResponse<void>> => {
     
     return axios.post(
       `http://127.0.0.1:8000/api/climate-indices/${id}`,

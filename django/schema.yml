@@ -96,11 +96,7 @@ paths:
       - {}
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClimateFunctionDetail'
-          description: ''
+          description: Created. New resource in response
 components:
   schemas:
     ClimateDataset:
