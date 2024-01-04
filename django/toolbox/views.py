@@ -80,7 +80,7 @@ class ClimateFunctionDetailView(APIView):
         Returns:
             json: list as json
         """
-        queryset = cf.ClimateFunctionList.list[id]
+        queryset = cf.ClimateFunctionList().get_func_by_id(id)
         serializer_class = ClimateFunctionDetailSerializer
         serializer_data = serializer_class(queryset).data
         return JsonResponse(serializer_data, safe=False)

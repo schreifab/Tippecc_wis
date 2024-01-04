@@ -7,6 +7,7 @@
     import { createApiClimateIndicesList, createApiClimateIndicesRetrieve } from "../api/api"
     import ClimateFunctionCard from "$lib/climateFunctionCard.svelte"
     import FunctionDetailsCard from "$lib/functionDetailsCard.svelte"
+    import ClimateScene from "$lib/climateScene.svelte"
    	
 
     const climatefuncs = createApiClimateIndicesList()
@@ -33,11 +34,14 @@
                         <ClimateFunctionCard climateFunction = {climateFunction} on:functionSelected={handleFunctionSelected}/>
                     {/each}
                 {/if} 
+                <ClimateScene />
             </div>
             <div>
-                {#if $funcDetails?.data?.data !== undefined}
-                    <FunctionDetailsCard functionDetails = {$funcDetails.data.data}/>
-                {/if}
+                {#key $funcDetails}
+                    {#if $funcDetails?.data?.data !== undefined}
+                        <FunctionDetailsCard functionDetails = {$funcDetails.data.data}/>
+                    {/if}
+                {/key}
             </div>
         </div>
     </div>

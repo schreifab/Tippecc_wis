@@ -104,7 +104,7 @@ class ClimateParameter(models.Model):
         
         
 class ClimateFunctionList:
-    list = [ClimateFunction(id=0,name="growing degree days", description="Growing degree-days over threshold temperature value",
+    list = [ClimateFunction(id=1,name="growing degree days", description="Growing degree-days over threshold temperature value",
                             dataset_dict = {
                                 "tas": ClimateDataset("temperature","mean daily temperature","none",False)
                                 },
@@ -113,15 +113,18 @@ class ClimateFunctionList:
                                 "freq": ClimateParameter("frequency", "Resampling frequency",[],[],'String', False)
                                 },
                             climateFunc=xclim.atmos.growing_degree_days),
-            ClimateFunction(id=1,name="growing degree days", description="Growing degree-days over threshold temperature value",
+            ClimateFunction(id=2,name="first day temperature below", description="First day of temperatures inferior to a given temperature threshold",
                             dataset_dict = {
                                 "tas": ClimateDataset("temperature","mean daily temperature","none",False)
                                 },
                             params_dict = {
                                 "thresh": ClimateParameter("threshold","Threshold temperature on which to base evaluation", ['degC', 'K'], [], 'String', False),
+                                "op": ClimateParameter("operator", "Comparison operation", [], ['<', '<=', 'lt', 'le'],'String', False),
+                                "after_date": ClimateParameter("date", "Date of the year after which to look for the first event. Should have the format mm-dd",[],[],'String',False),
+                                "window": ClimateParameter("window","Minimum number of days with temperature below threshold needed for evaluation.",[],[],'int',False),
                                 "freq": ClimateParameter("frequency", "Resampling frequency",[],[],'String', False)
                                 },
-                            climateFunc=xclim.atmos.growing_degree_days)
+                            climateFunc=xclim.indices.first_day_temperature_below)
             ]
     
     def get_func_by_id(self, id):

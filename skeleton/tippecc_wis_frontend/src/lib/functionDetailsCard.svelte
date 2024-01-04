@@ -7,8 +7,10 @@
 
     import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import {createApiClimateIndicesCreate, apiClimateIndicesCreate } from "../api/api";
+    const api_post_request = createApiClimateIndicesCreate()
 
-    function handleSubmit() {
+    function handleSubmit(id: number) {
+        
         console.log(params_array_4_binding);
         let data_request: ClimateFunctionRequest 
         let dataset_array: string [] = ["tas"] //change needed
@@ -18,8 +20,7 @@
             params_dict[entry.key] = entry.selected_field + " " + entry.selected_unit
         }
         data_request = {dataset_list: dataset_array, paramvalue_dict: params_dict }
-        const id = 0 
-        apiClimateIndicesCreate(id, data_request)
+        $api_post_request.mutate({id: id, data: data_request})
 
     }
 
@@ -73,6 +74,12 @@
             <label class="label">
                 <input class="input" type="text" placeholder="Input" bind:value={entry.selected_field}  />
             </label>
+        {:else}
+        <ListBox>
+            {#each entry.parameter.input_list as input_option}
+                <ListBoxItem bind:group={entry.selected_field} name="medium" value={input_option}>{input_option}</ListBoxItem>
+            {/each}
+        </ListBox>
         {/if}
         {#if entry.parameter.unit_list.length !== 0}
         <label class="label">
@@ -85,5 +92,5 @@
         {/if}
     </div>
     {/each}
-    <button type="submit" on:click={handleSubmit}>submit</button>
+    <button type="submit" on:click={() => handleSubmit(functionDetails.id)}>submit</button>
 </div>
