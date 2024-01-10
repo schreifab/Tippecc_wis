@@ -8,6 +8,7 @@
 import type { ClimateFunctionRequestParamvalueDict } from './climateFunctionRequestParamvalueDict';
 
 export interface ClimateFunctionRequest {
+  aoi: number[];
   dataset_list: string[];
   paramvalue_dict: ClimateFunctionRequestParamvalueDict;
 }

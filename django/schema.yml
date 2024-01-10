@@ -163,7 +163,13 @@ components:
         paramvalue_dict:
           type: object
           additionalProperties: {}
+        aoi:
+          type: array
+          items:
+            type: number
+            format: double
       required:
+      - aoi
       - dataset_list
       - paramvalue_dict
     ClimateParameter:

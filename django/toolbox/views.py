@@ -98,7 +98,8 @@ class ClimateFunctionDetailView(APIView):
         
         serializer_data = ClimateFunctionRequestSerializer(data=request.data)
         print(serializer_data.initial_data)
-        scene = cf.ClimateScene(17,20,-30,-25)
+        aoi = serializer_data.initial_data["aoi"]
+        scene = cf.ClimateScene(aoi)
         selected_climate_func = cf.ClimateFunctionList().get_func_by_id(id)
         
         if selected_climate_func == 0: 

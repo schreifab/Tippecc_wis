@@ -7,11 +7,12 @@
 
     import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import {createApiClimateIndicesCreate, apiClimateIndicesCreate } from "../api/api";
+    import {aoi} from "$lib/vars"
+
     const api_post_request = createApiClimateIndicesCreate()
 
     function handleSubmit(id: number) {
         
-        console.log(params_array_4_binding);
         let data_request: ClimateFunctionRequest 
         let dataset_array: string [] = ["tas"] //change needed
         let params_dict: { [key: string]: string | number } = {}
@@ -19,7 +20,7 @@
         for (let entry of params_array_4_binding){
             params_dict[entry.key] = entry.selected_field + " " + entry.selected_unit
         }
-        data_request = {dataset_list: dataset_array, paramvalue_dict: params_dict }
+        data_request = {aoi: aoi, dataset_list: dataset_array, paramvalue_dict: params_dict }
         $api_post_request.mutate({id: id, data: data_request})
 
     }

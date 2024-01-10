@@ -135,11 +135,11 @@ class ClimateFunctionList:
 
 class ClimateScene():
     
-    def __init__(self, lon_min, lon_max, lat_min, lat_max, time_min = '1970-01-01T12:00:00.000000000', time_max  = '2100-12-31T12:00:00.000000000'):
-        self.lon_min = lon_min
-        self.lon_max = lon_max
-        self.lat_min = lat_min
-        self.lat_max = lat_max
+    def __init__(self, aoi, time_min = '1970-01-01T12:00:00.000000000', time_max  = '2100-12-31T12:00:00.000000000'):
+        self.lon_min = aoi[0]
+        self.lon_max = aoi[1]
+        self.lat_min = aoi[2]
+        self.lat_max = aoi[3]
         self.time_min = time_min
         self.time_max = time_max
 
