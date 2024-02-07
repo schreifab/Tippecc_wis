@@ -32,6 +32,7 @@
                 {:else} 
                     {#each $climatefuncs.data.data as climateFunction}
                         <ClimateFunctionCard climateFunction = {climateFunction} on:functionSelected={handleFunctionSelected}/>
+                        <br>
                     {/each}
                 {/if} 
                 <ClimateScene />

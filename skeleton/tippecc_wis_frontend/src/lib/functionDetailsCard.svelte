@@ -32,11 +32,12 @@
     };
 
     let data_list: String[] = ["TIPPECC_CLMcom-KIT-CCLM5-0-15_v1_MPI-M-MPI-ESM-LR_tas_day_1950_2100.nc"];
-    let dataset_array_4_binding: {selection: string[], dataset: ClimateDataset}[] = [];
+    let dataset_array_4_binding: {selection: string[], key: string, dataset: ClimateDataset}[] = [];
     let params_array_4_binding: {key: string , selected_field: string | number, selected_unit: string, parameter: ClimateParameter}[] = [];
+    let check: string = 'false'
 
     for (let key in functionDetails.dataset_dict) {
-        dataset_array_4_binding.push({selection: [], dataset: functionDetails.dataset_dict[key]});
+        dataset_array_4_binding.push({selection: [], key: key, dataset: functionDetails.dataset_dict[key]});
     }
 
     for (let key in functionDetails.params_dict) {
@@ -45,27 +46,45 @@
 </script>
 
 <div class = 'card'>
+    <div class="card p-2 variant-filled-surface">
+        Datasets
+    </div>
+    
     {#each dataset_array_4_binding as entry}
     <div>
         <div> <!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
+            <span class="badge variant-ghost">
             {entry.dataset.name}
+            </span>
         </div>
         <div class="card p-4 variant-filled-secondary" data-popup="popupHover">
             <p>{entry.dataset.desc}</p>
             <div class="arrow variant-filled-secondary" />
         </div>
-    
-        <ListBox multiple>
-            {#each data_list as data}
-                <ListBoxItem bind:group={entry.selection} name="medium" value={data}>{data}</ListBoxItem>
-            {/each}
-        </ListBox>
+        {#if entry.dataset.optional === false}
+        <div class="flex items-center">
+            <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">{entry.key}</label>
+        </div>
+        {:else} 
+        hello
+        <div class="flex items-center">
+            <input checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">{entry.key}</label>
+        </div>
+        {/if} 
     </div>
     {/each}
+    <br>
+    <div class="card p-2 variant-filled-surface">
+        Parameters
+    </div>
     {#each params_array_4_binding as entry}
     <div>
         <div> <!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
+            <span class="badge variant-ghost">
             {entry.parameter.name}
+            </span>
         </div>
         <div class="card p-4 variant-filled-secondary" data-popup="popupHover">
             <p>{entry.parameter.desc}</p>
@@ -93,5 +112,6 @@
         {/if}
     </div>
     {/each}
-    <button type="submit" on:click={() => handleSubmit(functionDetails.id)}>submit</button>
+    <br>
+    <button type="submit" class="btn variant-filled-surface" on:click={() => handleSubmit(functionDetails.id)}>submit</button>
 </div>
