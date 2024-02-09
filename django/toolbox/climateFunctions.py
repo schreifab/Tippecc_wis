@@ -61,7 +61,7 @@ class ClimateDataset(models.Model):
     name = models.CharField(max_length=100)
     desc = models.CharField(max_length=200)
     filter_word = models.CharField(max_length=100)
-    optional = models.BooleanField
+    optional = models.BooleanField(editable = False, help_text = "True if dataset is optional")
 
     def __init__(self, name, desc, filter_word, optional):
         self.name = name
@@ -85,7 +85,7 @@ class ClimateParameter(models.Model):
     input_list = []
     unit_list = []
     datatype = models.CharField(max_length=100)
-    optional = models.BooleanField
+    optional = models.BooleanField(editable = False, help_text = "True if parameter is optional")
 
     def __init__(self, name, desc, unit_list, input_list, datatype, optional):    
         self.name = name

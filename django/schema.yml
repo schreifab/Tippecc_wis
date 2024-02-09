@@ -7,14 +7,8 @@ paths:
   /api/climate-indices/:
     get:
       operationId: api_climate_indices_list
-      description: |-
-        returns data for the api if called
-
-        Args:
-            request (_type_): _description_
-
-        Returns:
-            json: list as json
+      description: returns a list of all available climate functions
+      summary: Get all available climate functions
       tags:
       - api
       security:
@@ -33,19 +27,14 @@ paths:
   /api/climate-indices/{id}:
     get:
       operationId: api_climate_indices_retrieve
-      description: |-
-        returns data for the api if called
-
-        Args:
-            request (_type_): _description_
-
-        Returns:
-            json: list as json
+      description: Returns all information of a function by its id
+      summary: Get details for climate function
       parameters:
       - in: path
         name: id
         schema:
           type: integer
+        description: id of climate function
         required: true
       tags:
       - api
@@ -59,22 +48,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClimateFunctionDetail'
-          description: ''
+          description: success
+        '404':
+          description: id not found
+        '500':
+          description: internal server error
     post:
       operationId: api_climate_indices_create
-      description: |-
-        returns data for the api if called
-
-        Args:
-            request (_type_): _description_
-
-        Returns:
-            json: list as json
+      description: execute climate function by its id
+      summary: execute climate function
       parameters:
       - in: path
         name: id
         schema:
           type: integer
+        description: id of climate function
         required: true
       tags:
       - api
@@ -96,7 +84,13 @@ paths:
       - {}
       responses:
         '200':
-          description: Created. New resource in response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClimateFunctionDetail'
+          description: success
+        '500':
+          description: internal server error
 components:
   schemas:
     ClimateDataset:
@@ -112,8 +106,9 @@ components:
           type: string
           maxLength: 100
         optional:
-          type: string
+          type: boolean
           readOnly: true
+          description: True if dataset is optional
       required:
       - desc
       - filter_word
@@ -193,8 +188,9 @@ components:
           items:
             type: string
         optional:
-          type: string
+          type: boolean
           readOnly: true
+          description: True if parameter is optional
       required:
       - datatype
       - desc

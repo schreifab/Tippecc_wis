@@ -6,7 +6,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter, OpenApiTypes
 import toolbox.climateFunctions as cf
 
 from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetailSerializer, ClimateFunctionRequestSerializer
@@ -49,7 +49,10 @@ class ClimateFunctionListAPIView(APIView):
     Args:
         APIView: super class
     """
-    @extend_schema(responses = ClimateFunctionSerializer(many=True))
+    @extend_schema(
+        summary = 'Get all available climate functions',
+        description = 'returns a list of all available climate functions',
+        responses = ClimateFunctionSerializer(many=True))
     def get(self, request):
         """ returns data for the api if called
 
@@ -70,7 +73,15 @@ class ClimateFunctionDetailView(APIView):
     Args:
         APIView: super class
     """
-    @extend_schema(responses = ClimateFunctionDetailSerializer())
+    @extend_schema(
+        summary = 'Get details for climate function',
+        description = 'Returns all information of a function by its id',
+        parameters = [OpenApiParameter('id',OpenApiTypes.INT,OpenApiParameter.PATH,description='id of climate function')],
+        responses = {
+            200: OpenApiResponse(ClimateFunctionDetailSerializer(), description='success'),
+            404: OpenApiResponse(description = 'id not found'),
+            500: OpenApiResponse(description = 'internal server error')
+        })
     def get(self, request, id):
         """ returns data for the api if called
 
@@ -81,11 +92,25 @@ class ClimateFunctionDetailView(APIView):
             json: list as json
         """
         queryset = cf.ClimateFunctionList().get_func_by_id(id)
+        
+        if queryset == 0:
+            return Response(status = status.HTTP_404_NOT_FOUND)
+        
         serializer_class = ClimateFunctionDetailSerializer
+        if not serializer_class(queryset).is_valid:
+            return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         serializer_data = serializer_class(queryset).data
         return JsonResponse(serializer_data, safe=False)
     
-    @extend_schema(request=ClimateFunctionRequestSerializer(), responses = {200: OpenApiResponse(description='Created. New resource in response')})
+    @extend_schema(summary = 'execute climate function',
+        description = 'execute climate function by its id',
+        parameters = [OpenApiParameter('id',OpenApiTypes.INT,OpenApiParameter.PATH,description='id of climate function')],
+        request = ClimateFunctionRequestSerializer(),
+        responses = {
+            200: OpenApiResponse(ClimateFunctionDetailSerializer(), description='success'),
+            500: OpenApiResponse(description = 'internal server error')
+        })
     def post(self, request, id):
         """ returns data for the api if called
 

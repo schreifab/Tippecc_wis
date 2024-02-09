@@ -11,6 +11,7 @@ export interface ClimateParameter {
   desc: string;
   input_list: string[];
   name: string;
-  readonly optional: string;
+  /** True if parameter is optional */
+  readonly optional: boolean;
   unit_list: string[];
 }

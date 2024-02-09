@@ -36,13 +36,8 @@ import type {
 
 
 /**
- * returns data for the api if called
-
-Args:
-    request (_type_): _description_
-
-Returns:
-    json: list as json
+ * returns a list of all available climate functions
+ * @summary Get all available climate functions
  */
 export const apiClimateIndicesList = (
      options?: AxiosRequestConfig
@@ -80,6 +75,9 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 export type ApiClimateIndicesListQueryResult = NonNullable<Awaited<ReturnType<typeof apiClimateIndicesList>>>
 export type ApiClimateIndicesListQueryError = AxiosError<unknown>
 
+/**
+ * @summary Get all available climate functions
+ */
 export const createApiClimateIndicesList = <TData = Awaited<ReturnType<typeof apiClimateIndicesList>>, TError = AxiosError<unknown>>(
   options?: { query?:CreateQueryOptions<Awaited<ReturnType<typeof apiClimateIndicesList>>, TError, TData>, axios?: AxiosRequestConfig}
 
@@ -97,13 +95,8 @@ export const createApiClimateIndicesList = <TData = Awaited<ReturnType<typeof ap
 
 
 /**
- * returns data for the api if called
-
-Args:
-    request (_type_): _description_
-
-Returns:
-    json: list as json
+ * Returns all information of a function by its id
+ * @summary Get details for climate function
  */
 export const apiClimateIndicesRetrieve = (
     id: number, options?: AxiosRequestConfig
@@ -120,7 +113,7 @@ export const getApiClimateIndicesRetrieveQueryKey = (id: number,) => {
     }
 
     
-export const getApiClimateIndicesRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError = AxiosError<unknown>>(id: number, options?: { query?:CreateQueryOptions<Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError, TData>, axios?: AxiosRequestConfig}
+export const getApiClimateIndicesRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError = AxiosError<void>>(id: number, options?: { query?:CreateQueryOptions<Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError, TData>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
@@ -139,9 +132,12 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type ApiClimateIndicesRetrieveQueryResult = NonNullable<Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>>
-export type ApiClimateIndicesRetrieveQueryError = AxiosError<unknown>
+export type ApiClimateIndicesRetrieveQueryError = AxiosError<void>
 
-export const createApiClimateIndicesRetrieve = <TData = Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError = AxiosError<unknown>>(
+/**
+ * @summary Get details for climate function
+ */
+export const createApiClimateIndicesRetrieve = <TData = Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError = AxiosError<void>>(
  id: number, options?: { query?:CreateQueryOptions<Awaited<ReturnType<typeof apiClimateIndicesRetrieve>>, TError, TData>, axios?: AxiosRequestConfig}
 
   ): CreateQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -158,18 +154,13 @@ export const createApiClimateIndicesRetrieve = <TData = Awaited<ReturnType<typeo
 
 
 /**
- * returns data for the api if called
-
-Args:
-    request (_type_): _description_
-
-Returns:
-    json: list as json
+ * execute climate function by its id
+ * @summary execute climate function
  */
 export const apiClimateIndicesCreate = (
     id: number,
     climateFunctionRequest: ClimateFunctionRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<ClimateFunctionDetail>> => {
     
     return axios.post(
       `http://127.0.0.1:8000/api/climate-indices/${id}`,
@@ -179,7 +170,7 @@ export const apiClimateIndicesCreate = (
 
 
 
-export const getApiClimateIndicesCreateMutationOptions = <TError = AxiosError<unknown>,
+export const getApiClimateIndicesCreateMutationOptions = <TError = AxiosError<void>,
     TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: ClimateFunctionRequest}, TContext>, axios?: AxiosRequestConfig}
 ): CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: ClimateFunctionRequest}, TContext> => {
  const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
@@ -200,9 +191,12 @@ export const getApiClimateIndicesCreateMutationOptions = <TError = AxiosError<un
 
     export type ApiClimateIndicesCreateMutationResult = NonNullable<Awaited<ReturnType<typeof apiClimateIndicesCreate>>>
     export type ApiClimateIndicesCreateMutationBody = ClimateFunctionRequest
-    export type ApiClimateIndicesCreateMutationError = AxiosError<unknown>
+    export type ApiClimateIndicesCreateMutationError = AxiosError<void>
 
-    export const createApiClimateIndicesCreate = <TError = AxiosError<unknown>,
+    /**
+ * @summary execute climate function
+ */
+export const createApiClimateIndicesCreate = <TError = AxiosError<void>,
     TContext = unknown>(options?: { mutation?:CreateMutationOptions<Awaited<ReturnType<typeof apiClimateIndicesCreate>>, TError,{id: number;data: ClimateFunctionRequest}, TContext>, axios?: AxiosRequestConfig}
 ) => {
 

@@ -10,5 +10,6 @@ export interface ClimateDataset {
   desc: string;
   filter_word: string;
   name: string;
+  /** True if dataset is optional */
   readonly optional: boolean;
 }

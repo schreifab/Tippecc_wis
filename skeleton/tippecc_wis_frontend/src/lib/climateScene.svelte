@@ -15,7 +15,7 @@
      /**
      * @type {Map}
      */
-     let map;
+     let map: Map;
     /**
      * @type {import("ol/interaction/Interaction").default}
      */
@@ -24,33 +24,39 @@
      * @type {any[]}
      */
     let minx: number;
+
+    let map_exists: boolean = false
     // Initialize the map when the component is mounted
     onMount(initializeMap);
     function initializeMap() {
-        map = new Map({
-            target: 'map-container',
-            layers: [
-                new TileLayer({
-                    source: new OSM()
+        if (map_exists === false){
+            map = new Map({
+                target: 'map-container',
+                layers: [
+                    new TileLayer({
+                        source: new OSM()
+                    })
+                ],
+                view: new View({
+                    center: [0, 0],
+                    zoom: 2,
+                    extent: [75030.694516244, -4411300.315555968, 6438618.6747234445, 1202883.092131822] // adjust to real extent + x?
                 })
-            ],
-            view: new View({
-                center: [0, 0],
-                zoom: 2,
-                extent: [75030.694516244, -4411300.315555968, 6438618.6747234445, 1202883.092131822] // adjust to real extent + x?
-            })
-        });
-        extent = new ExtentInteraction({ condition: shiftKeyOnly });
-        map.addInteraction(extent);
-        extent.on('extentchanged', function () {
-            // [minx, miny, maxx, maxy]
-            console.log(extent.getExtent());
-            minx = extent.getExtent()[0];
-            aoiInput[0] = extent.getExtent()[0]
-            aoiInput[1] = extent.getExtent()[2]
-            aoiInput[2] = extent.getExtent()[1]
-            aoiInput[3] = extent.getExtent()[3]
-        });
+            });
+
+            extent = new ExtentInteraction({ condition: shiftKeyOnly });
+            map.addInteraction(extent);
+            map_exists = true
+
+            extent.on('extentchanged', function () {
+                // [minx, miny, maxx, maxy]
+                minx = extent.getExtent()[0];
+                aoiInput[0] = extent.getExtent()[0]
+                aoiInput[1] = extent.getExtent()[2]
+                aoiInput[2] = extent.getExtent()[1]
+                aoiInput[3] = extent.getExtent()[3]
+            });
+        }
     }
 </script>
 <div class = 'card'>
