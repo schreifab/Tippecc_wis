@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from rest_framework import serializers
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter, OpenApiTypes
 import toolbox.climateFunctions as cf
 
-from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetailSerializer, ClimateFunctionRequestSerializer
+from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetailSerializer, ClimateFunctionRequestSerializer, ExecuteResponseSerializer
 
 INPUT_FOLDER_PATH = "data"
 OUTPUT_FOLDER_PATH = "result_data"
@@ -41,6 +42,11 @@ def create_climate_function_details_4_api(id):
         
         
 def create_dataset_path_list(dataset_name,input_folder):
+    """
+    Function needs to be replaced. Should return a string array with pathes of all datasets for a dataset name
+    """
+    
+    
     return [os.path.join(input_folder, 'TIPPECC_CLMcom-KIT-CCLM5-0-15_v1_MPI-M-MPI-ESM-LR_tas_day_1950_2100.nc')]
 
 class ClimateFunctionListAPIView(APIView):
@@ -108,7 +114,7 @@ class ClimateFunctionDetailView(APIView):
         parameters = [OpenApiParameter('id',OpenApiTypes.INT,OpenApiParameter.PATH,description='id of climate function')],
         request = ClimateFunctionRequestSerializer(),
         responses = {
-            200: OpenApiResponse(ClimateFunctionDetailSerializer(), description='success'),
+            200: OpenApiResponse(ExecuteResponseSerializer, description='success'),
             500: OpenApiResponse(description = 'internal server error')
         })
     def post(self, request, id):
@@ -139,9 +145,11 @@ class ClimateFunctionDetailView(APIView):
 
             selected_climate_func.set_climate_scene(scene)
 
-        result_list = selected_climate_func.execute(OUTPUT_FOLDER_PATH)
+        message, result_list = selected_climate_func.execute(OUTPUT_FOLDER_PATH)
+        print(message)
         print(result_list)
-        
-        return Response(status = status.HTTP_200_OK)
+        response_clas = cf.ExecuteResponse(id, message)
+        print(ExecuteResponseSerializer(response_clas).data)
+        return JsonResponse(ExecuteResponseSerializer(response_clas).data, safe=False)
 
 

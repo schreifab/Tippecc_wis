@@ -1,5 +1,5 @@
 module.exports = {
-  xclim: {
+  climateindices: {
     output: {
       mode: 'tags-split',
       target: 'src/schema.ts',

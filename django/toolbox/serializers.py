@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from toolbox.climateFunctions import ClimateFunction, ClimateDataset, ClimateParameter, ClimateFunctionRequest, ClimateScene
+from toolbox.climateFunctions import ClimateFunction, ClimateDataset, ClimateParameter, ClimateFunctionRequest, ClimateScene, ExecuteResponse
 
 class StringListField(serializers.ListField):
     child = serializers.CharField()
@@ -39,9 +39,11 @@ class ClimateFunctionRequestSerializer(serializers.ModelSerializer):
     dataset_list = StringListField()
     paramvalue_dict =  serializers.DictField()
     aoi = FloatListField()
-    
     class Meta:
         model = ClimateFunctionRequest
         fields = ("dataset_list","paramvalue_dict","aoi")
 
-        
+class ExecuteResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExecuteResponse
+        fields = '__all__'

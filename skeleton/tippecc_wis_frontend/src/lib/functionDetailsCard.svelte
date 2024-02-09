@@ -10,6 +10,7 @@
     import {aoi} from "$lib/vars"
 
     const api_post_request = createApiClimateIndicesCreate()
+    let submitted: boolean = false
 
     function handleSubmit(id: number) {
         
@@ -22,7 +23,7 @@
         }
         data_request = {aoi: aoi, dataset_list: dataset_array, paramvalue_dict: params_dict }
         $api_post_request.mutate({id: id, data: data_request})
-
+        submitted =true
     }
 
     const popupHover: PopupSettings = {
@@ -45,7 +46,7 @@
     }
 </script>
 
-<div class = 'card'>
+<div class = 'card pb-3 pl-3 pr-3 pt-2'>
     <div class="card p-2 variant-filled-surface">
         Datasets
     </div>
@@ -115,3 +116,20 @@
     <br>
     <button type="submit" class="btn variant-filled-surface" on:click={() => handleSubmit(functionDetails.id)}>submit</button>
 </div>
+{#if submitted}
+
+        <div class = 'card'>
+            <header class = 'card-header flex justify-between items-center'>
+                <h2>Data submitted</h2>
+            </header>
+            <div class = 'card-body pb-3 pl-3' >
+                <p>
+                    {#if $api_post_request.data}
+                        {$api_post_request.data?.data.message}
+                    {:else}
+                        execution in progress
+                    {/if}
+                </p>
+            </div>
+        </div>
+{/if}

@@ -87,7 +87,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClimateFunctionDetail'
+                $ref: '#/components/schemas/ExecuteResponse'
           description: success
         '500':
           description: internal server error
@@ -198,6 +198,18 @@ components:
       - name
       - optional
       - unit_list
+    ExecuteResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        message:
+          type: string
+          maxLength: 200
+      required:
+      - id
+      - message
   securitySchemes:
     basicAuth:
       type: http

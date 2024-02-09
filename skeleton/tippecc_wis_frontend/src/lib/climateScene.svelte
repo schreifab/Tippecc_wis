@@ -11,6 +11,7 @@
     import OSM from 'ol/source/OSM';
     import ExtentInteraction from 'ol/interaction/Extent.js';
     import { shiftKeyOnly } from 'ol/events/condition.js';
+    import {transformExtent} from 'ol/proj';
 
      /**
      * @type {Map}
@@ -50,23 +51,26 @@
 
             extent.on('extentchanged', function () {
                 // [minx, miny, maxx, maxy]
-                minx = extent.getExtent()[0];
-                aoiInput[0] = extent.getExtent()[0]
-                aoiInput[1] = extent.getExtent()[2]
-                aoiInput[2] = extent.getExtent()[1]
-                aoiInput[3] = extent.getExtent()[3]
+                var lon_lat_extent = transformExtent(extent.getExtent(), 'EPSG:3857','EPSG:4326');
+                minx = lon_lat_extent[0];
+                aoiInput[0] = lon_lat_extent[0]
+                aoiInput[1] = lon_lat_extent[2]
+                aoiInput[2] = lon_lat_extent[1]
+                aoiInput[3] = lon_lat_extent[3]
             });
         }
     }
 </script>
 <div class = 'card'>
-    <div class = 'card-body pb-3 pl-3' >
-        aoi
+    <div class = 'card-body pb-3 pl-3 pr-3 pt-2' >
+        <div class="card p-2 variant-filled-surface">
+            Area of Interest
+        </div>    
         <label class="label">
-            <input class="input" type="number" placeholder="lat-min" bind:value={aoiInput[0]}  />
-            <input class="input" type="number" placeholder="lat-max" bind:value={aoiInput[1]}  />
-            <input class="input" type="number" placeholder="lon-min" bind:value={aoiInput[2]}  />
-            <input class="input" type="number" placeholder="lon-max" bind:value={aoiInput[3]}  />
+            Lat (min): <input class="input" type="number" step="0.001" placeholder="lat-min" bind:value={aoiInput[0]}  />
+            Lat (max): <input class="input" type="number" step="0.001" placeholder="lat-max" bind:value={aoiInput[1]}  />
+            Lon (min): <input class="input" type="number" step="0.001" placeholder="lon-min" bind:value={aoiInput[2]}  />
+            Lon (max): <input class="input" type="number" step="0.001" placeholder="lon-max" bind:value={aoiInput[3]}  />
         </label>
     </div>
 </div>

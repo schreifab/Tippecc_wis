@@ -32,6 +32,9 @@ import type {
 import type {
   ClimateFunctionRequest
 } from '../model/climateFunctionRequest'
+import type {
+  ExecuteResponse
+} from '../model/executeResponse'
 
 
 
@@ -160,7 +163,7 @@ export const createApiClimateIndicesRetrieve = <TData = Awaited<ReturnType<typeo
 export const apiClimateIndicesCreate = (
     id: number,
     climateFunctionRequest: ClimateFunctionRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<ClimateFunctionDetail>> => {
+ ): Promise<AxiosResponse<ExecuteResponse>> => {
     
     return axios.post(
       `http://127.0.0.1:8000/api/climate-indices/${id}`,
