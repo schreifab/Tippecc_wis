@@ -98,11 +98,11 @@ class ClimateFunction(models.Model):
         for i in range(number_of_datasets):
             try:
                 result_ds = self.climate_function(**self.create_kwargs_dict(i))
+                output_filename = self.name + "_" + str(i)
+                result_ds.to_netcdf(os.path.join(output_path, output_filename))
             except Exception as e:
                 message = str(e)
                 return message, results
-            output_filename = self.name + "_" + str(i)
-            result_ds.to_netcdf(os.path.join(output_path, output_filename))
             results.append(output_filename)
         return message, results
 
@@ -168,6 +168,10 @@ class ClimateParameter(models.Model):
     def set_value(self, value):
         if self.datatype == "float":
             self.value = float(value)
+        if self.datatype == "string" or self.datatype == "str":
+            self.value = str(value)
+        if self.datatype == "int" or self.datatype == "integer":
+            self.value = int(value)
         # add more elif statements here if other datatype transformations are needed
         else: 
             self.value = value
@@ -189,7 +193,7 @@ class ClimateFunctionList:
                                 },
                             params_dict = {
                                 "thresh": ClimateParameter("threshold","Threshold temperature on which to base evaluation", ['degC', 'K'], [], 'String', False),
-                                "op": ClimateParameter("operator", "Comparison operation", [], ['<', '<=', 'lt', 'le'],'String', False),
+                                "op": ClimateParameter("operator", "Comparison operation", [], ['<','<=','lt','le'],'String', False),
                                 "after_date": ClimateParameter("date", "Date of the year after which to look for the first event. Should have the format mm-dd",[],[],'String',False),
                                 "window": ClimateParameter("window","Minimum number of days with temperature below threshold needed for evaluation.",[],[],'int',False),
                                 "freq": ClimateParameter("frequency", "Resampling frequency",[],[],'String', False)

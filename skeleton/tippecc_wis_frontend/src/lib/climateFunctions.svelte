@@ -42,7 +42,7 @@
                 <ClimateScene />
             </div>
             <div>
-                {#key $funcDetails}
+                {#key idSelected}
                     {#if $funcDetails?.data?.data !== undefined}
                         <FunctionDetailsCard functionDetails = {$funcDetails.data.data}/>
                     {/if}

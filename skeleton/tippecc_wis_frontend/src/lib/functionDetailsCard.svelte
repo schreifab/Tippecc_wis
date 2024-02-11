@@ -19,11 +19,16 @@
         let params_dict: { [key: string]: string | number } = {}
 
         for (let entry of params_array_4_binding){
-            params_dict[entry.key] = entry.selected_field + " " + entry.selected_unit
+            if(entry.selected_unit === ""){
+                params_dict[entry.key] = entry.selected_field
+            }
+            else{
+                params_dict[entry.key] = entry.selected_field + " " + entry.selected_unit
+            }
         }
         data_request = {aoi: aoi, dataset_list: dataset_array, paramvalue_dict: params_dict }
         $api_post_request.mutate({id: id, data: data_request})
-        submitted =true
+        submitted = true
     }
 
     const popupHover: PopupSettings = {
@@ -32,10 +37,9 @@
         placement: 'bottom'
     };
 
-    let data_list: String[] = ["TIPPECC_CLMcom-KIT-CCLM5-0-15_v1_MPI-M-MPI-ESM-LR_tas_day_1950_2100.nc"];
     let dataset_array_4_binding: {selection: string[], key: string, dataset: ClimateDataset}[] = [];
     let params_array_4_binding: {key: string , selected_field: string | number, selected_unit: string, parameter: ClimateParameter}[] = [];
-    let check: string = 'false'
+
 
     for (let key in functionDetails.dataset_dict) {
         dataset_array_4_binding.push({selection: [], key: key, dataset: functionDetails.dataset_dict[key]});
@@ -93,7 +97,7 @@
         </div>
         {#if entry.parameter.input_list.length === 0}
             <label class="label">
-                <input class="input" type="text" placeholder="Input" bind:value={entry.selected_field}  />
+                <input class="input" type="text" placeholder="Input" bind:value={entry.selected_field}/>
             </label>
         {:else}
         <ListBox>
@@ -114,22 +118,24 @@
     </div>
     {/each}
     <br>
-    <button type="submit" class="btn variant-filled-surface" on:click={() => handleSubmit(functionDetails.id)}>submit</button>
-</div>
-{#if submitted}
 
-        <div class = 'card'>
-            <header class = 'card-header flex justify-between items-center'>
-                <h2>Data submitted</h2>
-            </header>
-            <div class = 'card-body pb-3 pl-3' >
-                <p>
-                    {#if $api_post_request.data}
-                        {$api_post_request.data?.data.message}
-                    {:else}
-                        execution in progress
-                    {/if}
-                </p>
-            </div>
+    <button type="submit" class="btn variant-filled-surface" on:click={() => handleSubmit(functionDetails.id)}>submit</button>
+
+</div>
+<br>
+{#if submitted}
+    <div class = 'card'>
+        <header class = 'card-header flex justify-between items-center'>
+            <h2>Data submitted</h2>
+        </header>
+        <div class = 'card-body pb-3 pl-3' >
+            <p>
+                {#if $api_post_request.data}
+                    {$api_post_request.data?.data.message}
+                {:else}
+                    execution in progress
+                {/if}
+            </p>
         </div>
+    </div>
 {/if}

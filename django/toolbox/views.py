@@ -132,20 +132,27 @@ class ClimateFunctionDetailView(APIView):
         aoi = serializer_data.initial_data["aoi"]
         scene = cf.ClimateScene(aoi)
         selected_climate_func = cf.ClimateFunctionList().get_func_by_id(id)
+        message = ""
+        result_list = []
         
         if selected_climate_func == 0: 
             print("Function not found")
         
         else:
-            print("Function Selected")
-            for dataset_name in serializer_data.initial_data["dataset_list"]:
-                selected_climate_func.dataset_dict[dataset_name].set_path_list(create_dataset_path_list(dataset_name, INPUT_FOLDER_PATH))
-            for key in serializer_data.initial_data["paramvalue_dict"]:
-                selected_climate_func.params_dict[key].set_value(serializer_data.initial_data["paramvalue_dict"][key])
+            try:
+                print("Function Selected")
+                for dataset_name in serializer_data.initial_data["dataset_list"]:
+                    selected_climate_func.dataset_dict[dataset_name].set_path_list(create_dataset_path_list(dataset_name, INPUT_FOLDER_PATH))
+                for key in serializer_data.initial_data["paramvalue_dict"]:
+                    selected_climate_func.params_dict[key].set_value(serializer_data.initial_data["paramvalue_dict"][key])
+                selected_climate_func.set_climate_scene(scene)
+            except Exception as e:
+                message = str(e)
+                    
 
-            selected_climate_func.set_climate_scene(scene)
-
-        message, result_list = selected_climate_func.execute(OUTPUT_FOLDER_PATH)
+           
+        if(message == ""):
+            message, result_list = selected_climate_func.execute(OUTPUT_FOLDER_PATH)
         print(message)
         print(result_list)
         response_clas = cf.ExecuteResponse(id, message)
