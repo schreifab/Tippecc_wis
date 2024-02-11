@@ -24,23 +24,30 @@
 
 </script>
 
-
+<h2 class = 'text-center text-xl'>TIPPECC climate indices web information system</h2>
+<br>
 <div class="container h-full mx-auto flex justify-center items-center">
     <div class="space-y-5">
-        <div class="grid h-screen grid-cols-2 gap-5">
-            <div>				
-                {#if $climatefuncs.isLoading}
-                    <p>Loading...</p>
-                {:else if $climatefuncs.isError}
-                    <span>Error: {$climatefuncs.error}</span>
-                {:else} 
-                    {#each $climatefuncs.data.data as climateFunction}
-                        <ClimateFunctionCard climateFunction = {climateFunction} on:functionSelected={handleFunctionSelected}/>
-                        <br>
-                    {/each}
-                {/if} 
+        <div class="grid h-screen grid-cols-3 gap-5">
+            <div>
                 <ClimateScene />
             </div>
+                <div class = "max-h-100 overflow-y-auto snap-y">
+                    <div class = "grid gap-y-1">		
+                    {#if $climatefuncs.isLoading}
+                        <p>Loading...</p>
+                    {:else if $climatefuncs.isError}
+                        <span>Error: {$climatefuncs.error}</span>
+                    {:else} 
+                        {#each $climatefuncs.data.data as climateFunction}
+                            <div>
+                                <ClimateFunctionCard climateFunction = {climateFunction} on:functionSelected={handleFunctionSelected}/>
+                            </div>
+                        {/each}
+                    {/if} 
+                </div>
+            </div>
+            
             <div>
                 {#key idSelected}
                     {#if $funcDetails?.data?.data !== undefined}

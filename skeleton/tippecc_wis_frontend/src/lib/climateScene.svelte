@@ -52,7 +52,6 @@
             extent.on('extentchanged', function () {
                 // [minx, miny, maxx, maxy]
                 var lon_lat_extent = transformExtent(extent.getExtent(), 'EPSG:3857','EPSG:4326');
-                minx = lon_lat_extent[0];
                 aoiInput[0] = lon_lat_extent[0]
                 aoiInput[1] = lon_lat_extent[2]
                 aoiInput[2] = lon_lat_extent[1]
@@ -74,7 +73,6 @@
         </label>
     </div>
 </div>
-<div>Top: {minx}</div>
 <div>
     Use Shift+Drag to draw an extent. Shift+Drag on the corners or edges of the extent to resize it.
     Shift+Click off the extent to remove it.
@@ -84,7 +82,7 @@
 <style>
     @import '/node_modules/ol/ol.css';
     .map {
-        width: 600px;
-        height: 600px;
+        width: 100%;
+        height: 400px;
     }
 </style>

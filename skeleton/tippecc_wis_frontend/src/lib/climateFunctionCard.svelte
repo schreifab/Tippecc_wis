@@ -10,7 +10,7 @@
     }
 </script>
 
-<div class = 'card'>
+<div class = 'card snap-start'>
     <header class = 'card-header flex justify-between items-center'><h2>{climateFunction.name}</h2>
         <button class = 'rounded p-2 variant-glass-primary' on:click={() => handleClick(climateFunction.id)}>&#8594;</button>
     </header>
