@@ -2,6 +2,8 @@
 from rest_framework import serializers
 from toolbox.climateFunctions import ClimateFunction, ClimateDataset, ClimateParameter, ClimateFunctionRequest, ClimateScene, ExecuteResponse
 
+#All Serilizer classes here
+
 class StringListField(serializers.ListField):
     child = serializers.CharField()
 

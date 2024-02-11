@@ -14,32 +14,6 @@ from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetail
 
 INPUT_FOLDER_PATH = "data"
 OUTPUT_FOLDER_PATH = "result_data"
-
-def create_climate_function_list_4_api():
-    """Creates a list of all functions available including id, name and function description
-
-    Returns:
-        list of dict: {id, name, description}
-    """
-    id = 0
-    list = []
-    for func in cf.ClimateFunctionList.list:
-        list.append({"id": id, "name": func.name, "description": func.description})
-        id += 1
-    return list
-        
-def create_climate_function_details_4_api(id):
-    """Creates a dictionary with detail information of function
-
-    Args:
-        id (int): id of function (number in list)
-
-    Returns:
-        dict: information for datasets and parameters of the function
-    """
-    func = cf.ClimateFunctionList.list[id]()
-    return {'datasets':[vars(func.dataset_dict[key]) for key in func.dataset_dict], 'parameters':[vars(func.params_dict[key]) for key in func.params_dict]}
-        
         
 def create_dataset_path_list(dataset_name,input_folder):
     """
@@ -118,26 +92,38 @@ class ClimateFunctionDetailView(APIView):
             500: OpenApiResponse(description = 'internal server error')
         })
     def post(self, request, id):
-        """ returns data for the api if called
+        """ 
+        The Main method for the workflow. 
+        Is triggered by Submit of the user. 
+        Get the data from the ui as ClimateFunctionRequest
+        
 
         Args:
-            request (_type_): _description_
+            id: int
+                func id
 
         Returns:
-            json: list as json
+            json:
+                Serialized data of Execute Respsonse
         """
         
         serializer_data = ClimateFunctionRequestSerializer(data=request.data)
         print(serializer_data.initial_data)
+        #climate Scene
         aoi = serializer_data.initial_data["aoi"]
         scene = cf.ClimateScene(aoi)
+        
+        #get function
         selected_climate_func = cf.ClimateFunctionList().get_func_by_id(id)
+        
+        #create return objects
         message = ""
         result_list = []
         
         if selected_climate_func == 0: 
-            print("Function not found")
+            message = "404 function not found"
         
+        #set paths values and scene
         else:
             try:
                 print("Function Selected")
@@ -150,13 +136,12 @@ class ClimateFunctionDetailView(APIView):
                 message = str(e)
                     
 
-           
+        #execute the function   
         if(message == ""):
             message, result_list = selected_climate_func.execute(OUTPUT_FOLDER_PATH)
         print(message)
         print(result_list)
         response_clas = cf.ExecuteResponse(id, message)
-        print(ExecuteResponseSerializer(response_clas).data)
         return JsonResponse(ExecuteResponseSerializer(response_clas).data, safe=False)
 
 
