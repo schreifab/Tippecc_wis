@@ -9,7 +9,7 @@ import type { ClimateFunctionDetailDatasetDict } from './climateFunctionDetailDa
 import type { ClimateFunctionDetailParamsDict } from './climateFunctionDetailParamsDict';
 
 export interface ClimateFunctionDetail {
-  dataset_dict: ClimateFunctionDetailDatasetDict;
-  readonly id: number;
-  params_dict: ClimateFunctionDetailParamsDict;
+	dataset_dict: ClimateFunctionDetailDatasetDict;
+	readonly id: number;
+	params_dict: ClimateFunctionDetailParamsDict;
 }

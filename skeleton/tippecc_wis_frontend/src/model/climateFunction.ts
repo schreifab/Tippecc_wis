@@ -7,7 +7,7 @@
  */
 
 export interface ClimateFunction {
-  description: string;
-  readonly id: number;
-  name: string;
+	description: string;
+	readonly id: number;
+	name: string;
 }

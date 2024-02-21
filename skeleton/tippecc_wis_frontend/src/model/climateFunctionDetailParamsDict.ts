@@ -7,4 +7,4 @@
  */
 import type { ClimateParameter } from './climateParameter';
 
-export type ClimateFunctionDetailParamsDict = {[key: string]: ClimateParameter};
+export type ClimateFunctionDetailParamsDict = { [key: string]: ClimateParameter };

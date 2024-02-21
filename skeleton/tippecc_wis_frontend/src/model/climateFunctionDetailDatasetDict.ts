@@ -7,4 +7,4 @@
  */
 import type { ClimateDataset } from './climateDataset';
 
-export type ClimateFunctionDetailDatasetDict = {[key: string]: ClimateDataset};
+export type ClimateFunctionDetailDatasetDict = { [key: string]: ClimateDataset };
