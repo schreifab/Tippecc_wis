@@ -52,10 +52,10 @@
 			extent.on('extentchanged', function () {
 				// [minx, miny, maxx, maxy]
 				var lon_lat_extent = transformExtent(extent.getExtent(), 'EPSG:3857', 'EPSG:4326');
-				aoiInput[0] = lon_lat_extent[0];
-				aoiInput[1] = lon_lat_extent[2];
-				aoiInput[2] = lon_lat_extent[1];
-				aoiInput[3] = lon_lat_extent[3];
+				aoiInput[0] = Number(lon_lat_extent[0].toFixed(3));
+				aoiInput[1] = Number(lon_lat_extent[2].toFixed(3));
+				aoiInput[2] = Number(lon_lat_extent[1].toFixed(3));
+				aoiInput[3] = Number(lon_lat_extent[3].toFixed(3));
 			});
 		}
 	}

@@ -9,11 +9,12 @@ from rest_framework import serializers
 import requests
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter, OpenApiTypes
-import toolbox.climateFunctions as cf
+import toolbox.models as cf
+from toolbox.climateFunctions import ClimateFunctionList
 
 from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetailSerializer, ClimateFunctionRequestSerializer, ExecuteResponseSerializer
 
-INPUT_FOLDER_PATH = "data"
+#INPUT_FOLDER_PATH = "data"
 OUTPUT_FOLDER_PATH = "result_data"
 PATH_API_URL = "https://leutra.geogr.uni-jena.de/backend_geoportal/climate/download?"
 
@@ -36,10 +37,7 @@ def create_dataset_path_dict(dataset_name,file_id_list):
     for file in file_id_list:
         file_split = file.split("_")
         if dataset_name == file_split[0]:
-            print(PATH_API_URL +  "id=" + file_split[2] + "&path=true")
             path_dict[file_split[1]] = requests.get(PATH_API_URL +  "id=" + file_split[2] + "&path=true").text
-
-    print("paths")
     print(path_dict)
     return path_dict
 
@@ -62,7 +60,7 @@ class ClimateFunctionListAPIView(APIView):
         Returns:
             json: list as json
         """
-        queryset = cf.ClimateFunctionList.list
+        queryset = ClimateFunctionList.list
         serializer_class = ClimateFunctionSerializer
         serializer_data = serializer_class(queryset, many=True).data
         return JsonResponse(serializer_data, safe=False)
@@ -91,7 +89,7 @@ class ClimateFunctionDetailView(APIView):
         Returns:
             json: list as json
         """
-        queryset = cf.ClimateFunctionList().get_func_by_id(id)
+        queryset = ClimateFunctionList().get_func_by_id(id)
         
         if queryset == 0:
             return Response(status = status.HTTP_404_NOT_FOUND)
@@ -134,7 +132,7 @@ class ClimateFunctionDetailView(APIView):
         scene = cf.ClimateScene(aoi)
         file_id_list = serializer_data.initial_data["file_id_list"]
         #get function
-        selected_climate_func = cf.ClimateFunctionList().get_func_by_id(id)
+        selected_climate_func = ClimateFunctionList().get_func_by_id(id)
         
         #create return objects
         message = ""

@@ -138,9 +138,21 @@
 				<div class="arrow variant-filled-secondary" />
 			</div>
 			{#if entry.parameter.input_list.length === 0}
-				<label class="label">
-					<input class="input" type="text" placeholder="Input" bind:value={entry.selected_field} />
-				</label>
+				{#if entry.parameter.datatype === "String" || entry.parameter.datatype === "str"}
+					<label class="label">
+						<input class="input" type="text" placeholder="Input" bind:value={entry.selected_field} />
+					</label>
+				{/if}
+				{#if entry.parameter.datatype === "number" || entry.parameter.datatype === "quantified" || entry.parameter.datatype === "float" || entry.parameter.datatype === "double"}
+					<label class="label">
+						<input class="input" type="number" step="0.001" placeholder="Input" bind:value={entry.selected_field} />
+					</label>
+				{/if}
+				{#if entry.parameter.datatype === "int" || entry.parameter.datatype === "Integer"}
+					<label class="label">
+						<input class="input" type="number" step="1" placeholder="Input" bind:value={entry.selected_field} />
+					</label>
+				{/if}
 			{:else}
 				<ListBox>
 					{#each entry.parameter.input_list as input_option}

@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from toolbox.climateFunctions import ClimateFunction, ClimateDataset, ClimateParameter, ClimateFunctionRequest, ClimateScene, ExecuteResponse
+from toolbox.models import ClimateFunction, ClimateDataset, ClimateParameter, ClimateFunctionRequest, ClimateScene, ExecuteResponse
 
 #All Serilizer classes here
 
