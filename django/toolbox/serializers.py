@@ -41,9 +41,10 @@ class ClimateFunctionRequestSerializer(serializers.ModelSerializer):
     dataset_list = StringListField()
     paramvalue_dict =  serializers.DictField()
     aoi = FloatListField()
+    file_id_list = StringListField()
     class Meta:
         model = ClimateFunctionRequest
-        fields = ("dataset_list","paramvalue_dict","aoi")
+        fields = ("dataset_list","paramvalue_dict","aoi","file_id_list")
 
 class ExecuteResponseSerializer(serializers.ModelSerializer):
     class Meta:

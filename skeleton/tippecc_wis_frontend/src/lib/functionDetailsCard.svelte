@@ -12,14 +12,14 @@
 
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { createApiClimateIndicesCreate, apiClimateIndicesCreate } from '../api/api';
-	import { aoi } from '$lib/vars';
+	import { aoi, file_ids } from '$lib/vars';
 
 	const api_post_request = createApiClimateIndicesCreate();
 	let submitted: boolean = false;
 
 	function handleSubmit(id: number) {
 		let data_request: ClimateFunctionRequest;
-		let dataset_array: string[] = ['tas']; //change needed
+		let dataset_array: string[] = []; 
 		let params_dict: { [key: string]: string | number } = {};
 
 		for (let entry of params_array_4_binding) {
@@ -29,7 +29,16 @@
 				params_dict[entry.key] = entry.selected_field + ' ' + entry.selected_unit;
 			}
 		}
-		data_request = { aoi: aoi, dataset_list: dataset_array, paramvalue_dict: params_dict };
+
+		for (let entry of dataset_array_4_binding) {
+			if (entry.selection === true){
+				dataset_array.push(entry.key)
+			}
+		}
+
+		
+
+		data_request = { aoi: aoi, dataset_list: dataset_array, file_id_list: file_ids,paramvalue_dict: params_dict };
 		$api_post_request.mutate({ id: id, data: data_request });
 		submitted = true;
 	}
@@ -40,7 +49,7 @@
 		placement: 'bottom'
 	};
 
-	let dataset_array_4_binding: { selection: string[]; key: string; dataset: ClimateDataset }[] = [];
+	let dataset_array_4_binding: { selection: Boolean; key: string; dataset: ClimateDataset }[] = [];
 	let params_array_4_binding: {
 		key: string;
 		selected_field: string | number;
@@ -50,7 +59,7 @@
 
 	for (let key in functionDetails.dataset_dict) {
 		dataset_array_4_binding.push({
-			selection: [],
+			selection: true,
 			key: key,
 			dataset: functionDetails.dataset_dict[key]
 		});
@@ -88,7 +97,7 @@
 						checked
 						id="disabled-checked-checkbox"
 						type="checkbox"
-						value=""
+						bind:value={entry.selection}
 						class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 					/>
 					<label
@@ -103,7 +112,7 @@
 						checked
 						id="disabled-checked-checkbox"
 						type="checkbox"
-						value=""
+						bind:value={entry.selection}
 						class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 					/>
 					<label
@@ -160,6 +169,7 @@
 		on:click={() => handleSubmit(functionDetails.id)}>submit</button
 	>
 </div>
+
 <br />
 {#if submitted}
 	<div class="card">

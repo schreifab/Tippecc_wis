@@ -6,6 +6,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework import serializers
+import requests
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter, OpenApiTypes
 import toolbox.climateFunctions as cf
@@ -14,14 +15,33 @@ from toolbox.serializers import ClimateFunctionSerializer, ClimateFunctionDetail
 
 INPUT_FOLDER_PATH = "data"
 OUTPUT_FOLDER_PATH = "result_data"
+PATH_API_URL = "https://leutra.geogr.uni-jena.de/backend_geoportal/climate/download?"
+
+# ad ds if xclim name and datafile name are not the same
+# left: xclim name/ key in ClimateDataset right: filename
+dataset_name_correction_list = {
+    'sfcWind': 'sfcwind'
+}
+
         
-def create_dataset_path_list(dataset_name,input_folder):
+def create_dataset_path_dict(dataset_name,file_id_list):
     """
     Function needs to be replaced. Should return a string array with pathes of all datasets for a dataset name
     """
+    # changes the name of the dataset if theyre not compatible with the xclim names here
+    path_dict = {}
     
-    
-    return [os.path.join(input_folder, 'TIPPECC_CLMcom-KIT-CCLM5-0-15_v1_MPI-M-MPI-ESM-LR_tas_day_1950_2100.nc')]
+    if dataset_name in dataset_name_correction_list:
+        dataset_name = dataset_name_correction_list[dataset_name]
+    for file in file_id_list:
+        file_split = file.split("_")
+        if dataset_name == file_split[0]:
+            print(PATH_API_URL +  "id=" + file_split[2] + "&path=true")
+            path_dict[file_split[1]] = requests.get(PATH_API_URL +  "id=" + file_split[2] + "&path=true").text
+
+    print("paths")
+    print(path_dict)
+    return path_dict
 
 class ClimateFunctionListAPIView(APIView):
     """Class for API View for climate function list
@@ -112,7 +132,7 @@ class ClimateFunctionDetailView(APIView):
         #climate Scene
         aoi = serializer_data.initial_data["aoi"]
         scene = cf.ClimateScene(aoi)
-        
+        file_id_list = serializer_data.initial_data["file_id_list"]
         #get function
         selected_climate_func = cf.ClimateFunctionList().get_func_by_id(id)
         
@@ -128,15 +148,16 @@ class ClimateFunctionDetailView(APIView):
             try:
                 print("Function Selected")
                 for dataset_name in serializer_data.initial_data["dataset_list"]:
-                    selected_climate_func.dataset_dict[dataset_name].set_path_list(create_dataset_path_list(dataset_name, INPUT_FOLDER_PATH))
+                    selected_climate_func.dataset_dict[dataset_name].set_path_dict(create_dataset_path_dict(dataset_name, file_id_list))
                 for key in serializer_data.initial_data["paramvalue_dict"]:
                     selected_climate_func.params_dict[key].set_value(serializer_data.initial_data["paramvalue_dict"][key])
                 selected_climate_func.set_climate_scene(scene)
             except Exception as e:
                 message = str(e)
-                    
 
-        #execute the function   
+        print(message)            
+
+        #execute the function 
         if(message == ""):
             message, result_list = selected_climate_func.execute(OUTPUT_FOLDER_PATH)
         print(message)

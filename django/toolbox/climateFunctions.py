@@ -90,15 +90,21 @@ class ClimateFunction(models.Model):
         """
         message = "Function was executed succesfully"
         results = []
+        print("test")
         # number of ds will return the amount of data to iterate or an error message
         number_of_datasets = self.get_number_of_datasets_or_error_message()
+        
         if type(number_of_datasets) is not int:
             # if error message: return
             return number_of_datasets, results
-        for i in range(number_of_datasets):
+        collection_ids = self.get_collection_ids_or_error_message()
+        if type(collection_ids) is str:
+            return collection_ids, results
+        print(collection_ids)
+        for id in collection_ids:
             try:
-                result_ds = self.climate_function(**self.create_kwargs_dict(i))
-                output_filename = self.name + "_" + str(i)
+                result_ds = self.climate_function(**self.create_kwargs_dict(id))
+                output_filename = self.name + "_" + str(id)
                 result_ds.to_netcdf(os.path.join(output_path, output_filename))
             except Exception as e:
                 message = str(e)
@@ -120,7 +126,7 @@ class ClimateFunction(models.Model):
         """
         number_of_datasets = 0
         for key in self.dataset_dict:
-            length = len(self.dataset_dict[key].path_list)
+            length = len(self.dataset_dict[key].path_dict)
             if (length == 0 and self.dataset_dict[key].optional == False):
                 return "No dataset found"
             if (number_of_datasets == 0):
@@ -129,7 +135,34 @@ class ClimateFunction(models.Model):
                 return "different amount of datasets were found. Unable to execute"
         return number_of_datasets
     
-    def create_kwargs_dict(self, i):
+    def get_collection_ids_or_error_message(self):
+        """
+        Health check for the given Dataset collection ids. 
+        Checks the following:
+        the ids of all dataset used must be the same
+        returns the collection id list for iteration or error message
+
+        Returns:
+            str | [str]:
+                Error message or id list
+        """
+        id_list = []
+        for key in self.dataset_dict:
+            if len(id_list) == 0:
+                id_list = list(self.dataset_dict[key].path_dict.keys())
+            else: 
+                compare_list = list(self.dataset_dict[key].path_dict.keys())
+                #optional might be zero
+                if len(compare_list) > 0: 
+                    if set(id_list) != set(compare_list):
+                        return "Data error: Not the same collections for the datasets found"
+        return id_list
+
+
+
+
+
+    def create_kwargs_dict(self, id):
         """
         create the argument dictionary that will be passed into the flexible climate function
 
@@ -144,7 +177,8 @@ class ClimateFunction(models.Model):
         """
         kwargs = {}
         for key in self.dataset_dict:
-            kwargs[key] = getattr(clip_ds_by_scene(self.dataset_dict[key].get_dataset(i), self.scene),data_array_names[key]) 
+            if len(self.dataset_dict[key].path_dict) > 0:
+                kwargs[key] = getattr(clip_ds_by_scene(self.dataset_dict[key].get_dataset(id), self.scene),data_array_names[key]) 
         for key in self.params_dict:
             kwargs[key] = self.params_dict[key].value
         print(kwargs)
@@ -192,8 +226,9 @@ class ClimateDataset(models.Model):
         self.desc = desc
         self.filter_word = filter_word
         self.optional = optional
+        self.path_dict = []
         
-    def set_path_list(self, path_list):
+    def set_path_dict(self, path_dict):
         """
         sets path list. 
         As pathlist is currently a public attribute, this function could be replaced
@@ -203,9 +238,9 @@ class ClimateDataset(models.Model):
             path_list: [str]
                 list of paths for the files
         """
-        self.path_list = path_list
+        self.path_dict = path_dict
         
-    def get_dataset(self, i):
+    def get_dataset(self, id):
         """
         Open the dataset for the path_list on position i
 
@@ -217,9 +252,10 @@ class ClimateDataset(models.Model):
             xarray.dataset
                 the open dataset that will be used for the calculation
         """
-        ds = xr.open_dataset(self.path_list[i], engine = 'netcdf4')
+        print(self.path_dict[id])
+        ds = xr.open_dataset(self.path_dict[id], engine = 'netcdf4')
         #remove if data correct
-        ds.tas.attrs['units'] = 'K'
+        #ds.tas.attrs['units'] = 'K'
         return ds
 
 
@@ -376,6 +412,7 @@ class ClimateFunctionRequest(models.Model):
     dataset_list = []
     paramvalue_dict = {}
     aoi = []
+    file_id_list = []
     def __init__(self, dataset_list, paramvalue_dict) :
         self.dataset_list = dataset_list
         self.paramvalue_dict = paramvalue_dict

@@ -163,9 +163,14 @@ components:
           items:
             type: number
             format: double
+        file_id_list:
+          type: array
+          items:
+            type: string
       required:
       - aoi
       - dataset_list
+      - file_id_list
       - paramvalue_dict
     ClimateParameter:
       type: object
