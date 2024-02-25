@@ -41,13 +41,13 @@ export const apiClimateIndicesList = (
  ): Promise<AxiosResponse<ClimateFunction[]>> => {
     
     return axios.get(
-      `http://127.0.0.1:8000/api/climate-indices/`,options
+      `https://leutra.geogr.uni-jena.de/backend_geoportal_fabian/api/climate-indices/`,options
     );
   }
 
 
 export const getApiClimateIndicesListQueryKey = () => {
-    return [`http://127.0.0.1:8000/api/climate-indices/`] as const;
+    return [`https://leutra.geogr.uni-jena.de/backend_geoportal_fabian/api/climate-indices/`] as const;
     }
 
     
@@ -100,13 +100,13 @@ export const apiClimateIndicesRetrieve = (
  ): Promise<AxiosResponse<ClimateFunctionDetail>> => {
     
     return axios.get(
-      `http://127.0.0.1:8000/api/climate-indices/${id}`,options
+      `https://leutra.geogr.uni-jena.de/backend_geoportal_fabian/api/climate-indices/${id}`,options
     );
   }
 
 
 export const getApiClimateIndicesRetrieveQueryKey = (id: number,) => {
-    return [`http://127.0.0.1:8000/api/climate-indices/${id}`] as const;
+    return [`https://leutra.geogr.uni-jena.de/backend_geoportal_fabian/api/climate-indices/${id}`] as const;
     }
 
     
@@ -160,7 +160,7 @@ export const apiClimateIndicesCreate = (
  ): Promise<AxiosResponse<ExecuteResponse>> => {
     
     return axios.post(
-      `http://127.0.0.1:8000/api/climate-indices/${id}`,
+      `https://leutra.geogr.uni-jena.de/backend_geoportal_fabian/api/climate-indices/${id}`,
       climateFunctionRequest,options
     );
   }

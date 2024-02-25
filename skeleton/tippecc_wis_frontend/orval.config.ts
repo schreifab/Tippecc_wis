@@ -3,7 +3,7 @@ module.exports = {
 		output: {
 			mode: 'tags-split',
 			target: 'src/schema.ts',
-			baseUrl: 'http://127.0.0.1:8000',
+			baseUrl: 'https://leutra.geogr.uni-jena.de/backend_geoportal_fabian',
 			schemas: 'src/model',
 			client: 'svelte-query',
 			mock: false
