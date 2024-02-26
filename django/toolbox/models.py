@@ -53,7 +53,7 @@ class ClimateFunction(models.Model):
     description = models.CharField(max_length=200)
     climate_function = models.Func
    
-    def __init__(self, id, name, description, dataset_dict=None, params_dict=None, climateFunc=None, optional_restrictions=False):
+    def __init__(self, id, name, description, dataset_dict=None, params_dict=None, climate_func=None, optional_restrictions=False):
         """
         Constructor
         """
@@ -63,7 +63,7 @@ class ClimateFunction(models.Model):
         self.description = description
         self.dataset_dict = dataset_dict
         self.params_dict = params_dict
-        self.climate_function = climateFunc
+        self.climate_function = climate_func
         self.optional_restrictions=optional_restrictions
         
     def set_climate_scene(self, scene): 
@@ -324,6 +324,8 @@ class ClimateParameter(models.Model):
             self.value = str(value)
         if self.datatype == "int" or self.datatype == "integer":
             self.value = int(value)
+        if self.datatype == "boolean":
+            self.value = bool(value)
         # add more elif statements here if other datatype transformations are needed
         else: 
             self.value = value

@@ -23,14 +23,14 @@
 <br />
 <div class="container h-full mx-auto flex justify-center items-center">
 	<div class="space-y-5">
-		<div class="grid h-screen grid-cols-4 gap-5">
+		<div class="grid h-screen grid-cols-4 pl-1 pr-1 gap-5">
 			<div>
 				<ClimateScene />
 			</div>
 			<div>
 				<DynamicOptions />
 			</div>
-			<div class="max-h-100 overflow-y-auto snap-y">
+			<div class="max-h-96 overflow-y-auto snap-y">
 				<div class="grid gap-y-1">
 					{#if $climatefuncs.isLoading}
 						<p>Loading...</p>

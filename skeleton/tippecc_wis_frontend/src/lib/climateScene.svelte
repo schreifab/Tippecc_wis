@@ -52,10 +52,10 @@
 			extent.on('extentchanged', function () {
 				// [minx, miny, maxx, maxy]
 				var lon_lat_extent = transformExtent(extent.getExtent(), 'EPSG:3857', 'EPSG:4326');
-				aoiInput[0] = Number(lon_lat_extent[0].toFixed(3));
-				aoiInput[1] = Number(lon_lat_extent[2].toFixed(3));
-				aoiInput[2] = Number(lon_lat_extent[1].toFixed(3));
-				aoiInput[3] = Number(lon_lat_extent[3].toFixed(3));
+				aoiInput[0] = Number(lon_lat_extent[1].toFixed(3));
+				aoiInput[1] = Number(lon_lat_extent[3].toFixed(3));
+				aoiInput[2] = Number(lon_lat_extent[0].toFixed(3));
+				aoiInput[3] = Number(lon_lat_extent[2].toFixed(3));
 			});
 		}
 	}
@@ -103,7 +103,6 @@
 	Use Shift+Drag to draw an extent. Shift+Drag on the corners or edges of the extent to resize it.
 	Shift+Click off the extent to remove it.
 </div>
-<div>Example: https://openlayers.org/en/latest/examples/extent-interaction.html</div>
 <div class="map" id="map-container" />
 
 <style>

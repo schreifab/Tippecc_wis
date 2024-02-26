@@ -49,6 +49,15 @@
 		placement: 'bottom'
 	};
 
+	function handle_popup(key:string){
+		const popupHover: PopupSettings = {
+		event: 'hover',
+		target: 'popover'+key,
+		placement: 'bottom'
+	}
+	return popupHover
+	}
+
 	let dataset_array_4_binding: { selection: Boolean; key: string; dataset: ClimateDataset }[] = [];
 	let params_array_4_binding: {
 		key: string;
@@ -82,11 +91,11 @@
 		<div>
 			<div>
 				<!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
-				<span class="badge variant-ghost">
+				<span data-popover-target ="popover{entry.key}" class="badge variant-ghost [&>*]:pointer-events-none" use:popup={handle_popup(entry.key)}>
 					{entry.dataset.name}
 				</span>
 			</div>
-			<div class="card p-4 variant-filled-secondary" data-popup="popupHover">
+			<div class="card p-4 variant-filled-secondary" data-popup="popover{entry.key}">
 				<p>{entry.dataset.desc}</p>
 				<div class="arrow variant-filled-secondary" />
 			</div>
@@ -129,11 +138,11 @@
 		<div>
 			<div>
 				<!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
-				<span class="badge variant-ghost">
+				<span data-popover-target ="popover{entry.key}" class="badge variant-ghost [&>*]:pointer-events-none" use:popup={handle_popup(entry.key)}>
 					{entry.parameter.name}
 				</span>
 			</div>
-			<div class="card p-4 variant-filled-secondary" data-popup="popupHover">
+			<div class="card p-4 variant-filled-secondary" data-popup="popover{entry.key}">
 				<p>{entry.parameter.desc}</p>
 				<div class="arrow variant-filled-secondary" />
 			</div>
