@@ -1,3 +1,6 @@
+<!--component for dynamic options of the data calculations scenario-->
+<!--developed by Franziska Zander-->
+
 <script>
 	import { onMount } from 'svelte';
 	import { updateFileIds } from './vars';

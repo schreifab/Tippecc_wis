@@ -136,7 +136,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Tippecc WIS',
-    'DESCRIPTION': 'Your project description',
+    'DESCRIPTION': 'Tippecc WIS is a web-based information system in development with a generic workflow for climate indices calculation',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS

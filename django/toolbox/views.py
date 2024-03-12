@@ -145,8 +145,10 @@ class ClimateFunctionDetailView(APIView):
         else:
             try:
                 print("Function Selected")
+                # for each dataset: get a list of paths for the available files. Dict with collection id as keys
                 for dataset_name in serializer_data.initial_data["dataset_list"]:
                     selected_climate_func.dataset_dict[dataset_name].set_path_dict(create_dataset_path_dict(dataset_name, file_id_list))
+                #for each parameter: set the value and if nessacary transform datatype
                 for key in serializer_data.initial_data["paramvalue_dict"]:
                     selected_climate_func.params_dict[key].set_value(serializer_data.initial_data["paramvalue_dict"][key])
                 selected_climate_func.set_climate_scene(scene)

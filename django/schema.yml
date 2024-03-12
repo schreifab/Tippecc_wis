@@ -2,7 +2,8 @@ openapi: 3.0.3
 info:
   title: Tippecc WIS
   version: 1.0.0
-  description: Your project description
+  description: Tippecc WIS is a web-based information system in development with a
+    generic workflow for climate indices calculation
 paths:
   /api/climate-indices/:
     get:

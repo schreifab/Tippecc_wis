@@ -8,6 +8,7 @@ from django.db import models
 
 data_array_names = {
     "tas": 'tas'
+    #add more here
 }
 
 class ClimateFunction(models.Model):
@@ -44,7 +45,7 @@ class ClimateFunction(models.Model):
         main method for the inices calculation
     get_number_of_datasets_or_error_message(self)
         health check of the data array
-    create_kwargs_dict(self, i)
+    create_kwargs_dict(self, id)
         create kwargs to call the climate_function
     """
     
@@ -209,8 +210,8 @@ class ClimateDataset(models.Model):
         Constructor
     set_path_list(self, path_list)
         sets the paths list
-    get_dataset(self, i)
-        opens and returns the ds for the path list on i
+    get_dataset(self, id)
+        opens and returns the ds for the path list on id
     """
     
     name = models.CharField(max_length=100)
@@ -268,7 +269,7 @@ class ClimateParameter(models.Model):
     Attributes
     ----------
     name: str:
-        the name of the ds
+        the name of the parameter
     desc: str
         a short description 
     input_list: [str]
@@ -355,8 +356,18 @@ class ClimateScene():
 
 class ClimateFunctionRequest(models.Model):
     """
-    Not a `real` class, just a model for request. 
-    See api documentation for more.
+    Modell for the Request
+
+    Attributes
+    ----------
+    dataset_list: [str]
+        list of selected datasets
+    paramvalue_dict: {str: str}
+        selected value for each param
+    aoi: [float]
+        area of interest
+    file_id_list: [str]
+        list of available files for the selected scenario
     """
     dataset_list = []
     paramvalue_dict = {}
@@ -368,8 +379,14 @@ class ClimateFunctionRequest(models.Model):
 
 class ExecuteResponse(models.Model):
     """
-    Not a `real` class, just a model for request. 
-    See api documentation for more.
+    Response after the execution
+    Attributes
+    ----------
+    message: str
+        message for the user about the execution process
+    id: int
+        id of the function
+
     """
     message =  models.CharField(max_length=200)
     id = models.IntegerField

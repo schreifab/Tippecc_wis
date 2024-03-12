@@ -1,4 +1,9 @@
+<!--
+	component for climate Function Details and submit
+-->
+
 <script lang="ts">
+	//import models
 	import type {
 		ClimateFunctionDetail,
 		ClimateDataset,
@@ -7,21 +12,26 @@
 	} from '../model';
 	export let functionDetails: ClimateFunctionDetail;
 
+
+	//import
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
-
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { createApiClimateIndicesCreate, apiClimateIndicesCreate } from '../api/api';
 	import { aoi, file_ids } from '$lib/vars';
 
+	//create object for submit
 	const api_post_request = createApiClimateIndicesCreate();
+	
 	let submitted: boolean = false;
 
+	//handle submit
+	//write data as ClimateFunctionRequest for request to api
 	function handleSubmit(id: number) {
 		let data_request: ClimateFunctionRequest;
 		let dataset_array: string[] = []; 
 		let params_dict: { [key: string]: string | number } = {};
-
+		//adds all params. If unit is available, value and unit are combined.
 		for (let entry of params_array_4_binding) {
 			if (entry.selected_unit === '') {
 				params_dict[entry.key] = entry.selected_field;
@@ -29,7 +39,7 @@
 				params_dict[entry.key] = entry.selected_field + ' ' + entry.selected_unit;
 			}
 		}
-
+		// adds all selected ds. Non optional are selected per default
 		for (let entry of dataset_array_4_binding) {
 			if (entry.selection === true){
 				dataset_array.push(entry.key)
@@ -37,18 +47,21 @@
 		}
 
 		
-
+		//object for request
 		data_request = { aoi: aoi, dataset_list: dataset_array, file_id_list: file_ids,paramvalue_dict: params_dict };
+		//do request
 		$api_post_request.mutate({ id: id, data: data_request });
 		submitted = true;
 	}
 
+	//dynamic object for popup
 	const popupHover: PopupSettings = {
 		event: 'hover',
 		target: 'popupHover',
 		placement: 'bottom'
 	};
 
+	//handle popup dependig on the key of the element that is hovered
 	function handle_popup(key:string){
 		const popupHover: PopupSettings = {
 		event: 'hover',
@@ -58,6 +71,8 @@
 	return popupHover
 	}
 
+	//array for binding of the dataset input and params inputs
+	// This is necessary because it is not possible to bind the hmtl elemtns directly to the object.
 	let dataset_array_4_binding: { selection: Boolean; key: string; dataset: ClimateDataset }[] = [];
 	let params_array_4_binding: {
 		key: string;
@@ -83,14 +98,14 @@
 		});
 	}
 </script>
-
+<!--html Block-->
 <div class="card pb-3 pl-3 pr-3 pt-2">
 	<div class="card p-2 variant-filled-surface">Datasets</div>
-
+	<!--Iterate the datasets-->
 	{#each dataset_array_4_binding as entry}
 		<div>
 			<div>
-				<!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
+				<!--popup-->
 				<span data-popover-target ="popover{entry.key}" class="badge variant-ghost [&>*]:pointer-events-none" use:popup={handle_popup(entry.key)}>
 					{entry.dataset.name}
 				</span>
@@ -99,6 +114,7 @@
 				<p>{entry.dataset.desc}</p>
 				<div class="arrow variant-filled-secondary" />
 			</div>
+			<!--add checkbox that is just clickable, if the ds is optional-->
 			{#if entry.dataset.optional === false}
 				<div class="flex items-center">
 					<input
@@ -115,17 +131,16 @@
 					>
 				</div>
 			{:else}
-				hello
 				<div class="flex items-center">
 					<input
 						checked
-						id="disabled-checked-checkbox"
+						id="checked-checkbox"
 						type="checkbox"
 						bind:value={entry.selection}
 						class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 					/>
 					<label
-						for="disabled-checked-checkbox"
+						for="checked-checkbox"
 						class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">{entry.key}</label
 					>
 				</div>
@@ -137,7 +152,7 @@
 	{#each params_array_4_binding as entry}
 		<div>
 			<div>
-				<!--class = "[&>*]:pointer-events-none" use:popup={popupHover}>-->
+				<!--popup-->
 				<span data-popover-target ="popover{entry.key}" class="badge variant-ghost [&>*]:pointer-events-none" use:popup={handle_popup(entry.key)}>
 					{entry.parameter.name}
 				</span>
@@ -146,23 +161,28 @@
 				<p>{entry.parameter.desc}</p>
 				<div class="arrow variant-filled-secondary" />
 			</div>
+			<!--alorithm for the correct input element-->
 			{#if entry.parameter.input_list.length === 0}
+				<!--add form if no list is available-->
 				{#if entry.parameter.datatype === "String" || entry.parameter.datatype === "str"}
 					<label class="label">
 						<input class="input" type="text" placeholder="Input" bind:value={entry.selected_field} />
 					</label>
 				{/if}
+				<!--number field if required-->
 				{#if entry.parameter.datatype === "number" || entry.parameter.datatype === "quantified" || entry.parameter.datatype === "float" || entry.parameter.datatype === "double"}
 					<label class="label">
 						<input class="input" type="number" step="0.001" placeholder="Input" bind:value={entry.selected_field} />
 					</label>
 				{/if}
+				<!--int if required-->
 				{#if entry.parameter.datatype === "int" || entry.parameter.datatype === "Integer"}
 					<label class="label">
 						<input class="input" type="number" step="1" placeholder="Input" bind:value={entry.selected_field} />
 					</label>
 				{/if}
 			{:else}
+			<!--else (list available): add list box-->
 				<ListBox>
 					{#each entry.parameter.input_list as input_option}
 						<ListBoxItem bind:group={entry.selected_field} name="medium" value={input_option}
@@ -172,6 +192,7 @@
 				</ListBox>
 			{/if}
 			{#if entry.parameter.unit_list.length !== 0}
+			<!--if units are required: add units as select box -->
 				<label class="label">
 					<select class="select" bind:value={entry.selected_unit}>
 						{#each entry.parameter.unit_list as unit}
@@ -183,7 +204,7 @@
 		</div>
 	{/each}
 	<br />
-
+	<!--submit button-->
 	<button
 		type="submit"
 		class="btn variant-filled-surface"
@@ -191,6 +212,7 @@
 	>
 </div>
 
+<!--text box for iformation after submit-->
 <br />
 {#if submitted}
 	<div class="card">
