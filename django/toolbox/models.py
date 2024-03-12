@@ -91,7 +91,6 @@ class ClimateFunction(models.Model):
         """
         message = "Function was executed succesfully"
         results = []
-        print("test")
         # number of ds will return the amount of data to iterate or an error message
         number_of_datasets = self.get_number_of_datasets_or_error_message()
         
@@ -100,12 +99,17 @@ class ClimateFunction(models.Model):
             return number_of_datasets, results
         collection_ids = self.get_collection_ids_or_error_message()
         if type(collection_ids) is str:
+            # if error message: return
             return collection_ids, results
         print(collection_ids)
+        #for each collection id: search file and execute
         for id in collection_ids:
             try:
+                #execute
                 result_ds = self.climate_function(**self.create_kwargs_dict(id))
+                #result file name
                 output_filename = self.name + "_" + str(id)
+                #write data
                 result_ds.to_netcdf(os.path.join(output_path, output_filename))
             except Exception as e:
                 message = str(e)
